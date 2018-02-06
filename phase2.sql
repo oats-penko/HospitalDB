@@ -163,6 +163,7 @@ GROUP BY A.patientSSN;
 /*Report the employee who has access to the largest number of rooms. 
 We need the employee ID, and the number of rooms (s)he can access.
 Note: If there are several employess with the same maximum number, then report all of these employees.*/
+/*
 SELECT cnt.empID, MAX(cnt.NumRooms) AS RoomCount
 FROM
 (
@@ -171,11 +172,28 @@ FROM
 	GROUP BY A.empID
 ) AS cnt
 WHERE cnt.NumRooms = MAX(NumRooms);
+*/
+SELECT A.empID
+FROM empAccess AS A
+GROUP BY A.empID
+HAVING COUNT(A.RoomNumber) = MAX(COUNT(A.RoomNumber));
 
 /* For patients who have a scheduled future visit (which is part of their most recent visit), report that patient 
 (SSN, and first and last names) and the visit date. Do not report patients who do not have scheduled visit.*/
-/*
+
 SELECT P.SSN, P.firstName, P.lastName, A.aptDate 
 FROM Patient AS P, Appointment AS A
-WHERE P.SSN = A.patientSSN 
-*/
+WHERE P.SSN = A.patientSSN AND A.futureAptID IS NOT NULL;
+
+/*Q10: Report the date of the coming future visit for patient with SSN = 111-22-3333.
+Note: This date should exist in the last (most recent) visit of that patient.*/
+
+/*Report the equipment types (only the ID) for which the hospital has purchased equipments (units)
+ in both 2010 and 2011. Do not report duplication.*/
+ SELECT DISTINCT E.typeID 
+ FROM Equipment E, Unit U
+ WHERE E.numberOfUnits > 0 AND U.eqTypeID = E.typeID AND U.yearOfPurchase = 2010
+ INTERSECT 
+ SELECT DISTINCT E.typeID
+ FROM Equipment E, Unit U 
+ WHERE E.numberOfUnits > 0 AND U.eqTypeID = E.typeID AND U.yearOfPurchase = 2011;
