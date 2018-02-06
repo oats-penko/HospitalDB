@@ -145,3 +145,37 @@ CREATE TABLE PatientArrival
 INSERT INTO AptRoom VALUES(TO_DATE('17/12/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'), 1, 123411234, TO_DATE('17/12/2014 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
 
 
+/* PART 2 - SQL QUERIES*/
+
+/*For a given division manager (say, ID = 10), report all regular employees 
+that are supervised by this manager. Display the employees ID, names, and salary.*/
+SELECT ID, firstName, lastName, salary
+FROM Employee 
+WHERE Employee.managerID = 10;
+
+/*Report the number of visits done for each patient, 
+i.e., for each patient, report the patient SSN, first and last names, and the count of visits done by this patient.*/  
+SELECT P.SSN, P.firstName, P.lastName, COUNT(A.AptID) AS NumVisits
+FROM Patient AS P, Appointment AS A
+WHERE P.SSN = A.patientSSN
+GROUP BY A.patientSSN;
+
+/*Report the employee who has access to the largest number of rooms. 
+We need the employee ID, and the number of rooms (s)he can access.
+Note: If there are several employess with the same maximum number, then report all of these employees.*/
+SELECT cnt.empID, MAX(cnt.NumRooms) AS RoomCount
+FROM
+(
+	SELECT A.empID, COUNT(A.RoomNumber) AS NumRooms
+	FROM empAccess AS A
+	GROUP BY A.empID
+) AS cnt
+WHERE cnt.NumRooms = MAX(NumRooms);
+
+/* For patients who have a scheduled future visit (which is part of their most recent visit), report that patient 
+(SSN, and first and last names) and the visit date. Do not report patients who do not have scheduled visit.*/
+/*
+SELECT P.SSN, P.firstName, P.lastName, A.aptDate 
+FROM Patient AS P, Appointment AS A
+WHERE P.SSN = A.patientSSN 
+*/
