@@ -102,17 +102,23 @@ INSERT INTO Doctor VALUES(1, 'psychology', 'male', 'David', 'ONeill');
 INSERT INTO Doctor VALUES(2, 'psychology', 'female', 'David', 'ONeill');
 INSERT INTO Doctor VALUES(3, 'psychology', 'male', 'David', 'ONeill');
 
+/*NOTE: We simplified our previous model to match the Phase 1 Solution. We no longer have a separate PatientArrival table, 
+and store the future date in the current appointment entry.*/
 	
 CREATE TABLE Appointment(
 	AptID INTEGER PRIMARY KEY,
 	totalPayment NUMBER(50, 2), 
 	insuranceCoverage NUMBER(6,5), 
 	patientSSN INTEGER FOREIGN KEY REFERENCES Patient(SSN),
-	futureAptID INTEGER FOREIGN KEY REFERENCES Appointment(AptID),
-	aptDate DATE);
+	/*futureAptID INTEGER FOREIGN KEY REFERENCES Appointment(AptID),*/
+	admissionDate DATETIME,
+	leaveDate DATETIME, 
+	futureAptDate DATETIME);
 
-INSERT INTO Appointment VALUES(1, 100000, .50, 123421234, 2, TO_DATE('17/12/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Appointment VALUES(2, 30000, .20, 123412345, null, TO_DATE('17/12/2014 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Appointment VALUES(1, 100000, .50, 123421234, TO_DATE('17/12/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'),
+ TO_DATE('17/12/2014 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('03/05/2015 11:30:00', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Appointment VALUES(2, 30000, .20, 123412345, TO_DATE('03/05/2015 11:30:00', 'DD/MM/YYYY hh:mi:ss'), 
+TO_DATE('03/05/2015 02:30:00', 'DD/MM/YYYY hh:mi:ss'), null);
 
 CREATE TABLE AptRoom(
 	aptID INTEGER FOREIGN KEY REFERENCES Appointment(AptID),
@@ -133,16 +139,8 @@ CREATE TABLE Examine(
 INSERT INTO Examine VALUES(1, 1, 'hes dead');
 
 	 
-CREATE TABLE PatientArrival
-(
-	timeIn DATE,
-	aptID INTEGER FOREIGN KEY REFERENCES Appointment(AptID),
-	SSN INTEGER FOREIGN KEY REFERENCES Patient(SSN),
-	timeLv DATE,
-	PRIMARY KEY(timeIn, aptID, SSN)
-);
 
-INSERT INTO AptRoom VALUES(TO_DATE('17/12/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'), 1, 123411234, TO_DATE('17/12/2014 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+
 
 
 /* PART 2 - SQL QUERIES*/
@@ -187,6 +185,9 @@ WHERE P.SSN = A.patientSSN AND A.futureAptID IS NOT NULL;
 
 /*Q10: Report the date of the coming future visit for patient with SSN = 111-22-3333.
 Note: This date should exist in the last (most recent) visit of that patient.*/
+SELECT A.futureAptDate 
+FROM Appointment AS A
+WHERE A.patientSSN = 111223333;
 
 /*Report the equipment types (only the ID) for which the hospital has purchased equipments (units)
  in both 2010 and 2011. Do not report duplication.*/
