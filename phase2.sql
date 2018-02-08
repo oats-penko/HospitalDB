@@ -1,17 +1,17 @@
+/*PART 1 CREATING THE DATABASE */
+
 CREATE TABLE Employee
 (
 	ID INTEGER PRIMARY KEY,
 	salary REAL DEFAULT 0,
 	officeNumber INTEGER NOT NULL, 
-	jobTitle VARCHAR2(100), /* add constraint to have the 3 types */
-	firstName VARCHAR2(100), 
-	lastName VARCHAR2(100), 
-	managerID INTEGER FOREIGN KEY REFERENCES EMPLOYEE(ID),
-	CONSTRAINT jobPsn CHECK (jobTitle in ('Regular', 'DivisionManager', 'GeneralManager'))
+	jobTitle VARCHAR2(20),
+	firstName VARCHAR2(20), 
+	lastName VARCHAR2(20), 
+	managerID INTEGER,
+	CONSTRAINT jobPsn CHECK (jobTitle in ('Regular', 'DivisionManager', 'GeneralManager')),
+	CONSTRAINT mngID FOREIGN KEY (managerID) REFERENCES EMPLOYEE(ID)
 );
-INSERT INTO Employee VALUES(100, 80000, 100, 'Regular','Stan', 'Smith', 200); /*add more Employees*/
-INSERT INTO Employee VALUES(200, 80000, 200, 'DivisionManager','Dan', 'Song', 300);
-INSERT INTO Employee VALUES(300, 80000, 300, 'GeneralManager','Rodica', 'Neamtu', NULL);
 
 CREATE TABLE Room
 (
@@ -20,31 +20,28 @@ CREATE TABLE Room
 	CONSTRAINT flag CHECK (occupied in (1,0))
 ); 
 
-INSERT INTO Room VALUES(1, 0);
-INSERT INTO Room VALUES(2, 1);
-INSERT INTO Room VALUES(3, 1);
-INSERT INTO Room VALUES(2, 1); /*add more rooms*/
-INSERT INTO Room VALUES(2, 1);
-
 CREATE TABLE empAccess(
 	empID INTEGER, 
 	roomNumber INTEGER NOT NULL,
 	FOREIGN KEY (empID) REFERENCES Employee(ID), 
 	FOREIGN KEY (roomNumber) REFERENCES Room(roomNumber),
-	PRIMARY KEY (empID, roomNumber));
+	PRIMARY KEY (empID, roomNumber)
+);
 
 INSERT INTO empAccess VALUES(100, 1);
-INSERT INTO empAccess VALUES(101, 1);
+INSERT INTO empAccess VALUES(101, 2);
+INSERT INTO empAccess VALUES(101, 3);
 INSERT INTO empAccess VALUES(200, 2);
 INSERT INTO empAccess VALUES(200, 2);
 INSERT INTO empAccess VALUES(300, 3);
 INSERT INTO empAccess VALUES(300, 3);
-
 
 CREATE TABLE roomService(
 	roomNumber INTEGER FOREIGN KEY REFERENCES Room(roomNumber), 
 	rService VARCHAR2(100),
-	PRIMARY KEY (roomNumber, rService)); 
+	PRIMARY KEY (roomNumber, rService)
+); 
+
 INSERT INTO roomService VALUES(2, 'MRI'); /*add more services */
 INSERT INTO roomService VALUES(2, 'OperatingRoom');
 INSERT INTO roomService VALUES(1, 'EmergencyRoom');
@@ -138,18 +135,49 @@ CREATE TABLE Examine(
 
 INSERT INTO Examine VALUES(1, 1, 'hes dead');
 
-	 
 
+/* PART 3 - POPULATE THE DATABASE*/
 
+/*add more Employees*/
 
+INSERT INTO Employee VALUES(300, 80000, 300, 'GeneralManager','Rodica', 'Neamtu', NULL);
+INSERT INTO Employee VALUES(202, 120000, 202, 'DivisionManager','Trevor', 'Valcourt', 300);
+INSERT INTO Employee VALUES(201, 110000, 201, 'DivisionManager','Ryan', 'Cooney', 300);
+INSERT INTO Employee VALUES(200, 80000, 200, 'DivisionManager','Dan', 'Song', 300);
+INSERT INTO Employee VALUES(102, 100000, 102, 'Regular','Robert', 'Scarduzio', 201);
+INSERT INTO Employee VALUES(101, 70000, 101, 'Regular','Mike', 'Ross', 200);
+INSERT INTO Employee VALUES(100, 80000, 100, 'Regular','Stan', 'Smith', 200);	 
 
-/* PART 2 - SQL QUERIES*/
+SELECT * FROM Employee;
+
+INSERT INTO Room VALUES(1, 0);
+INSERT INTO Room VALUES(2, 1);
+INSERT INTO Room VALUES(3, 1);
+INSERT INTO Room VALUES(4, 0);
+INSERT INTO Room VALUES(5, 0);
+INSERT INTO Room VALUES(6, 0);
+INSERT INTO Room VALUES(7, 1);
+INSERT INTO Room VALUES(8, 1);
+INSERT INTO Room VALUES(9, 0);
+INSERT INTO Room VALUES(10, 0);
+
+SELECT * FROM Room;
+
+ 
+/* PART 2 - SQL QUERIES */
+
+/*Q1: Report the hospital rooms (the room number) that are currently occupied. */
+SELECT Room.roomNumber
+FROM Room
+WHERE occupied=1;
 
 /*For a given division manager (say, ID = 10), report all regular employees 
 that are supervised by this manager. Display the employees ID, names, and salary.*/
 SELECT ID, firstName, lastName, salary
 FROM Employee 
 WHERE Employee.managerID = 10;
+
+
 
 /*Report the number of visits done for each patient, 
 i.e., for each patient, report the patient SSN, first and last names, and the count of visits done by this patient.*/  
