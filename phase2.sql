@@ -218,13 +218,25 @@ INSERT INTO Appointment VALUES(1, 100000, 5000, 123421234, TO_DATE('17/12/2013 1
 TO_DATE('17/12/2014 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('03/05/2015 11:30:00', 'DD/MM/YYYY hh:mi:ss'));
 INSERT INTO Appointment VALUES(2, 30000, 20000, 123421234, TO_DATE('03/05/2015 11:30:00', 'DD/MM/YYYY hh:mi:ss'), 
 TO_DATE('03/05/2015 02:30:00', 'DD/MM/YYYY hh:mi:ss'), null);
+INSERT INTO Appointment VALUES(3, 100000, 5000, 111223333, TO_DATE('17/12/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'),
+TO_DATE('17/12/2014 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('03/05/2015 11:30:00', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Appointment VALUES(4, 30000, 20000, 111223333, TO_DATE('03/05/2015 11:30:00', 'DD/MM/YYYY hh:mi:ss'), 
+TO_DATE('03/05/2015 02:39:00', 'DD/MM/YYYY hh:mi:ss'), null);
+INSERT INTO Appointment VALUES(5, 100000, 5000, 111223333, TO_DATE('17/12/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'),
+TO_DATE('17/12/2014 02:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('03/05/2015 11:30:00', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Appointment VALUES(6, 30000, 20000, 111223333, TO_DATE('03/05/2015 11:30:00', 'DD/MM/YYYY hh:mi:ss'), 
+TO_DATE('03/05/2015 02:30:00', 'DD/MM/YYYY hh:mi:ss'), null);
 
 SELECT * FROM Appointment;
 
 INSERT INTO AptRoom VALUES(1, 1, TO_DATE('17/12/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('17/12/2014 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
 
 INSERT INTO Examine VALUES(1, 1, 'hes dead');
+INSERT INTO Examine VALUES(2, 3, 'hes dead');
+INSERT INTO Examine VALUES(2, 4, 'hes dead');
+INSERT INTO Examine VALUES(2, 5, 'hes dead');
 
+SELECT * FROM Examine;
  
 /* PART 2 - SQL QUERIES */
 
@@ -304,6 +316,15 @@ Note: This date should exist in the last (most recent) visit of that patient.*/
 SELECT A.futureAptDate 
 FROM Appointment AS A
 WHERE A.patientSSN = 111223333;
+
+/*Q11: For patient with SSN = 111-22-3333, report the doctors (only ID) who have
+examined this patient more than 2 times.*/
+
+SELECT Examine.docID
+FROM Examine, Appointment
+WHERE Appointment.patientSSN = 111223333 AND Appointment.aptID = Examine.aptID
+GROUP BY Examine.docID
+HAVING COUNT(Appointment.aptID) > 2;
 
 /*Report the equipment types (only the ID) for which the hospital has purchased equipments (units)
  in both 2010 and 2011. Do not report duplication.*/
