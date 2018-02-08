@@ -119,43 +119,33 @@ CREATE TABLE Examine(
 	CONSTRAINT examine_PK PRIMARY KEY(docID, aptID) 
 );
 
-INSERT INTO Employee VALUES(100, 80000, 100, 'Regular','Stan', 'Smith', 200); /*add more Employees*/
-INSERT INTO Employee VALUES(200, 80000, 200, 'DivisionManager','Dan', 'Song', 300);
 INSERT INTO Employee VALUES(300, 80000, 300, 'GeneralManager','Rodica', 'Neamtu', NULL);
-
+INSERT INTO Employee VALUES(200, 80000, 200, 'DivisionManager','Dan', 'Song', 300);
+INSERT INTO Employee VALUES(100, 80000, 100, 'Regular','Stan', 'Smith', 200); 
 INSERT INTO Room VALUES(1, 0);
 INSERT INTO Room VALUES(2, 1);
 INSERT INTO Room VALUES(3, 1);
-INSERT INTO Room VALUES(2, 1); /*add more rooms*/
-INSERT INTO Room VALUES(2, 1);
-
 INSERT INTO empAccess VALUES(100, 1);
-INSERT INTO empAccess VALUES(101, 1);
+INSERT INTO empAccess VALUES(100, 2);
 INSERT INTO empAccess VALUES(200, 2);
-INSERT INTO empAccess VALUES(200, 2);
+INSERT INTO empAccess VALUES(300, 2);
 INSERT INTO empAccess VALUES(300, 3);
-INSERT INTO empAccess VALUES(300, 3);
-
-INSERT INTO roomService VALUES(2, 'MRI'); /*add more services */
+INSERT INTO roomService VALUES(2, 'MRI'); 
 INSERT INTO roomService VALUES(2, 'OperatingRoom');
 INSERT INTO roomService VALUES(1, 'EmergencyRoom');
 INSERT INTO roomService VALUES(1, 'ICU');
 INSERT INTO roomService VALUES(1, 'Bathroom');
 INSERT INTO roomService VALUES(3, 'ICU');
-INSERT INTO roomService VALUES(3, 'ICU');
-INSERT INTO roomService VALUES(3, 'ICU');
-INSERT INTO roomService VALUES(3, 'ICU');
+
 
 INSERT INTO Equipment VALUES(1, 9, 'Sony', 'drill', 'be careful');
 INSERT INTO Equipment VALUES(2, 29, 'Panasonic', 'light', 'be very careful');
 INSERT INTO Equipment VALUES(3, 69, 'Samsung', 'stretcher', 'put person on stretcher');
 
-INSERT INTO Unit VALUES(1000, 1994, TO_DATE('17/12/2015 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Unit VALUES(1001, 1995, TO_DATE('17/12/2017 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Unit VALUES(1002, 1996, TO_DATE('17/12/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Unit VALUES(1000, 1, 1, 1994, TO_DATE('17/12/2015 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Unit VALUES(1001, 2, 1, 1995, TO_DATE('17/12/2017 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Unit VALUES(1002, 3, 1, 1996, TO_DATE('17/12/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
 
-INSERT INTO Patient VALUES(123421234, 8671234567, 'James', 'Woods', '12 Olive St.');
-INSERT INTO Patient VALUES(123421234, 8671234567, 'James', 'Woods', '12 Olive St.');
 INSERT INTO Patient VALUES(123421234, 8671234567, 'James', 'Woods', '12 Olive St.');
 
 INSERT INTO Doctor VALUES(1, 'psychology', 'male', 'David', 'ONeill');
@@ -163,8 +153,8 @@ INSERT INTO Doctor VALUES(2, 'psychology', 'female', 'David', 'ONeill');
 INSERT INTO Doctor VALUES(3, 'psychology', 'male', 'David', 'ONeill');
 
 INSERT INTO Appointment VALUES(1, 100000, .50, 123421234, TO_DATE('17/12/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'),
- TO_DATE('17/12/2014 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('03/05/2015 11:30:00', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Appointment VALUES(2, 30000, .20, 123412345, TO_DATE('03/05/2015 11:30:00', 'DD/MM/YYYY hh:mi:ss'), 
+TO_DATE('17/12/2014 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('03/05/2015 11:30:00', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Appointment VALUES(2, 30000, .20, 123421234, TO_DATE('03/05/2015 11:30:00', 'DD/MM/YYYY hh:mi:ss'), 
 TO_DATE('03/05/2015 02:30:00', 'DD/MM/YYYY hh:mi:ss'), null);
 
 INSERT INTO AptRoom VALUES(1, 1, TO_DATE('17/12/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('17/12/2014 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
