@@ -501,7 +501,7 @@ WHERE Appointment.patientSSN = 111223333 AND Appointment.aptID = Examine.aptID
 GROUP BY Examine.docID
 HAVING COUNT(Appointment.aptID) > 2;
 
-/*Report the equipment types (only the ID) for which the hospital has purchased equipments (units)
+/*Q12: Report the equipment types (only the ID) for which the hospital has purchased equipments (units)
  in both 2010 and 2011. Do not report duplication.*/
  SELECT DISTINCT E.typeID 
  FROM Equipment E, Unit U
