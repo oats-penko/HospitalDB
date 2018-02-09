@@ -25,7 +25,7 @@ CREATE TABLE Employee(
 
 CREATE TABLE Room( 
 	roomNumber INTEGER PRIMARY KEY,  
-	occupied NUMBER(1), 
+	occupied NUMBER(1) DEFAULT 0, 
 	CONSTRAINT flag CHECK (occupied in (1,0)) 
 );
 
@@ -120,93 +120,281 @@ CREATE TABLE Examine(
 );
 
 INSERT INTO Employee VALUES(300, 80000, 300, 'GeneralManager','Rodica', 'Neamtu', NULL);
+INSERT INTO Employee VALUES(301, 80000, 300, 'GeneralManager','Pablo', 'Picasso', NULL);
+INSERT INTO Employee VALUES(302, 80000, 300, 'GeneralManager','Freddie', 'Mercury', NULL);
+
 INSERT INTO Employee VALUES(200, 80000, 200, 'DivisionManager','Dan', 'Song', 300);
+INSERT INTO Employee VALUES(201, 80000, 200, 'DivisionManager','Elaine', 'Smith', 300);
+INSERT INTO Employee VALUES(202, 80000, 200, 'DivisionManager','David', 'Bowie', 300);
+INSERT INTO Employee VALUES(203, 80000, 200, 'DivisionManager','Frida', 'Kahlo', 301);
+INSERT INTO Employee VALUES(204, 80000, 200, 'DivisionManager','John', 'Lennon', 301);
+INSERT INTO Employee VALUES(205, 80000, 200, 'DivisionManager','Margaret', 'Thatcher', 302);
+
 INSERT INTO Employee VALUES(100, 80000, 100, 'Regular','Stan', 'Smith', 200); 
-INSERT INTO Room VALUES(1, 0);
-INSERT INTO Room VALUES(2, 1);
-INSERT INTO Room VALUES(3, 1);
-INSERT INTO empAccess VALUES(100, 1);
-INSERT INTO empAccess VALUES(100, 2);
-INSERT INTO empAccess VALUES(200, 2);
-INSERT INTO empAccess VALUES(300, 2);
-INSERT INTO empAccess VALUES(300, 3);
+INSERT INTO Employee VALUES(101, 80000, 100, 'Regular','Jackie', 'Chan', 200); 
+INSERT INTO Employee VALUES(102, 80000, 100, 'Regular','Patrick', 'Star', 201); 
+INSERT INTO Employee VALUES(103, 80000, 100, 'Regular','Robert', 'Sponge', 202); 
+INSERT INTO Employee VALUES(104, 80000, 100, 'Regular','Julia', 'Roberts', 203); 
+INSERT INTO Employee VALUES(105, 80000, 100, 'Regular','Meryl', 'Priest', 204); 
+INSERT INTO Employee VALUES(106, 80000, 100, 'Regular','Daniella', 'Rodriguez', 205); 
+INSERT INTO Employee VALUES(107, 80000, 100, 'Regular','Eric', 'Jones', 203); 
+INSERT INTO Employee VALUES(108, 80000, 100, 'Regular','Sylvia', 'Jackson', 203); 
+INSERT INTO Employee VALUES(109, 80000, 100, 'Regular','Jennifer', 'Michaels', 201); 
+INSERT INTO Employee VALUES(110, 80000, 100, 'Regular','Alan', 'Poe', 202); 
+INSERT INTO Employee VALUES(111, 80000, 100, 'Regular','Jack', 'London', 204); 
+
+INSERT INTO Room(roomNumber) VALUES(1);
+INSERT INTO Room(roomNumber) VALUES(2);
+INSERT INTO Room(roomNumber) VALUES(3);
+INSERT INTO Room(roomNumber) VALUES(4);
+INSERT INTO Room(roomNumber) VALUES(5);
+INSERT INTO Room(roomNumber) VALUES(6);
+INSERT INTO Room(roomNumber) VALUES(7);
+INSERT INTO Room(roomNumber) VALUES(8);
+INSERT INTO Room(roomNumber) VALUES(9);
+INSERT INTO Room(roomNumber) VALUES(10);
+INSERT INTO Room(roomNumber) VALUES(11);
+INSERT INTO Room(roomNumber) VALUES(100);
+INSERT INTO Room(roomNumber) VALUES(200);
+INSERT INTO Room(roomNumber) VALUES(300);
+
+
+
+
 INSERT INTO roomService VALUES(2, 'MRI'); 
 INSERT INTO roomService VALUES(2, 'OperatingRoom');
 INSERT INTO roomService VALUES(1, 'EmergencyRoom');
 INSERT INTO roomService VALUES(1, 'ICU');
 INSERT INTO roomService VALUES(1, 'Bathroom');
-INSERT INTO roomService VALUES(3, 'ICU');
+INSERT INTO roomService VALUES(3, 'InformationCenter');
+INSERT INTO roomService VALUES(3, 'WaitingArea');
+INSERT INTO roomService VALUES(3, 'Bathroom');
+INSERT INTO roomService VALUES(3, 'Cafe');
+INSERT INTO roomService VALUES(4, 'MRI');
+INSERT INTO roomService VALUES(5, 'X-Ray');
+INSERT INTO roomService VALUES(6, 'OperatingRoom');
+INSERT INTO roomService VALUES(7, 'Cafe');
+INSERT INTO roomService VALUES(8, 'Nursery');
+INSERT INTO roomService VALUES(9, 'CTScan');
+INSERT INTO roomService VALUES(10, 'ICU');
+INSERT INTO roomService VALUES(11, 'ServiceCloset');
+INSERT INTO roomService VALUES(100, 'RegularOffice');
+INSERT INTO roomService VALUES(200, 'DMOffice');
+INSERT INTO roomService VALUES(300, 'GMOffice');
 
+INSERT INTO empAccess VALUES(100, 1);
+INSERT INTO empAccess VALUES(101, 2);
+INSERT INTO empAccess VALUES(102, 3);
+INSERT INTO empAccess VALUES(103, 4);
+INSERT INTO empAccess VALUES(104, 5);
+INSERT INTO empAccess VALUES(105, 6);
+INSERT INTO empAccess VALUES(106, 7);
+INSERT INTO empAccess VALUES(107, 7);
+INSERT INTO empAccess VALUES(108, 8);
+INSERT INTO empAccess VALUES(109, 9);
+INSERT INTO empAccess VALUES(110, 10);
+INSERT INTO empAccess VALUES(111, 11);
+
+
+INSERT INTO empAccess VALUES(200, 2);
+INSERT INTO empAccess VALUES(300, 1);
+INSERT INTO empAccess VALUES(300, 2);
+INSERT INTO empAccess VALUES(300, 3);
+INSERT INTO empAccess VALUES(300, 4);
+INSERT INTO empAccess VALUES(301, 5);
+INSERT INTO empAccess VALUES(301, 6);
+INSERT INTO empAccess VALUES(301, 7);
+INSERT INTO empAccess VALUES(301, 8);
+INSERT INTO empAccess VALUES(302, 9);
+INSERT INTO empAccess VALUES(302, 10);
+INSERT INTO empAccess VALUES(302, 11);
 
 INSERT INTO Equipment VALUES(1, 9, 'Sony', 'drill', 'be careful');
-INSERT INTO Equipment VALUES(2, 29, 'Panasonic', 'light', 'be very careful');
+INSERT INTO Equipment VALUES(2, 29, 'Panasonic', 'light', 'turn on');
 INSERT INTO Equipment VALUES(3, 69, 'Samsung', 'stretcher', 'put person on stretcher');
+INSERT INTO Equipment VALUES(4, 7, 'LRMN', 'CTScanner', 'press button');
+INSERT INTO Equipment VALUES(5, 3, 'Original', 'X-Ray', 'scan body part');
+INSERT INTO Equipment VALUES(6, 3, 'XII', 'CoffeMachine', 'scan body part');
 
-INSERT INTO Unit VALUES(1000, 1, 1, 1994, TO_DATE('17/12/2015 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Unit VALUES(1001, 2, 1, 1995, TO_DATE('17/12/2017 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Unit VALUES(1002, 3, 1, 1996, TO_DATE('17/12/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+
+
+
+INSERT INTO Unit VALUES(1000, 1, 1, 1994, TO_DATE('17/12/2011 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Unit VALUES(1001, 1, 2, 1995, TO_DATE('14/02/2010 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Unit VALUES(1002, 1, 4, 1996, TO_DATE('10/10/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Unit VALUES(2000, 2, 9, 1996, TO_DATE('01/01/2014 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Unit VALUES(2001, 2, 11, 2011, TO_DATE('17/12/2011 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Unit VALUES(2002, 2, 8, 2010, TO_DATE('17/12/2010 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Unit VALUES(3000, 3, 7, 2011, TO_DATE('17/12/2017 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Unit VALUES(3001, 3, 2, 2009, TO_DATE('04/12/2011 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Unit VALUES(3002, 3, 3, 2003, TO_DATE('17/12/2010 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Unit VALUES(4000, 4, 1, 2000, TO_DATE('13/11/2010 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Unit VALUES(4001, 4, 5, 2008, TO_DATE('14/12/2010 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Unit VALUES(4002, 4, 6, 2017, TO_DATE('17/10/2011 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Unit VALUES(5000, 5, 3, 2017, TO_DATE('18/12/2017 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Unit VALUES(5001, 5, 2, 2010, TO_DATE('17/12/2012 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Unit VALUES(5002, 5, 10, 2011, TO_DATE('17/09/2010 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Unit VALUES(6000, 6, 7, 2010, TO_DATE('17/12/2010 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Unit VALUES(6001, 6, 3, 2011, TO_DATE('17/03/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Unit VALUES(6002, 6, 8, 1986, TO_DATE('17/04/2011 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+
 
 INSERT INTO Patient VALUES(123421234, 8671234567, 'James', 'Woods', '12 Olive St.');
+INSERT INTO Patient VALUES(111223333, 8671234561, 'Sarah', 'Burk', '111 Central St.');
+INSERT INTO Patient VALUES(101208888, 8671234562, 'James', 'Snow', '12 Salisbury St.');
+INSERT INTO Patient VALUES(354421234, 8671234563, 'Richard', 'Bennet', '3 Apricot Ln.');
+INSERT INTO Patient VALUES(789421554, 8671234564, 'Samantha', 'Davids', '14 Dot Rd.');
+INSERT INTO Patient VALUES(010421244, 8671234565, 'Joseph', 'Priestly', '10 Oliver Dr.');
+INSERT INTO Patient VALUES(202421234, 8671234569, 'Thomas', 'Sawyer', '13 Juniper Rd.');
+INSERT INTO Patient VALUES(605421664, 8671234223, 'Huckleberry', 'Finn', '10 Strawberry Ln.');
+INSERT INTO Patient VALUES(304421202, 8671234123, 'Sheila', 'Jones', '6 Jackson St.');
+INSERT INTO Patient VALUES(012421290, 8671234333, 'Jeremy', 'Rust', '17 Bridge St.');
+INSERT INTO Patient VALUES(123428923, 8671234444, 'Stephen', 'Larsen', '10 Roger St.');
+
 
 INSERT INTO Doctor VALUES(1, 'psychology', 'male', 'David', 'ONeill');
-INSERT INTO Doctor VALUES(2, 'psychology', 'female', 'David', 'ONeill');
-INSERT INTO Doctor VALUES(3, 'psychology', 'male', 'David', 'ONeill');
+INSERT INTO Doctor VALUES(2, 'orthopedic', 'female', 'Julia', 'Jones');
+INSERT INTO Doctor VALUES(3, 'surgery', 'male', 'Edward', 'Scissor');
+INSERT INTO Doctor VALUES(4, 'endocrinology', 'female', 'Sylvia', 'Nelson');
+INSERT INTO Doctor VALUES(5, 'neurology', 'male', 'Thomas', 'Pettigrew');
+INSERT INTO Doctor VALUES(6, 'nutrition', 'female', 'Sarah', 'Davids');
+INSERT INTO Doctor VALUES(7, 'pediatry', 'male', 'Oliver', 'Twist');
+INSERT INTO Doctor VALUES(8, 'gynecology', 'female', 'Selena', 'Michaels');
+INSERT INTO Doctor VALUES(9, 'radiology', 'male', 'James', 'Oliver');
+INSERT INTO Doctor VALUES(10, 'cardiac', 'female', 'Ida', 'Smith');
+
 
 INSERT INTO Appointment VALUES(1, 100000, .50, 123421234, TO_DATE('17/12/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'),
 TO_DATE('17/12/2014 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('03/05/2015 11:30:00', 'DD/MM/YYYY hh:mi:ss'));
 INSERT INTO Appointment VALUES(2, 30000, .20, 123421234, TO_DATE('03/05/2015 11:30:00', 'DD/MM/YYYY hh:mi:ss'), 
 TO_DATE('03/05/2015 02:30:00', 'DD/MM/YYYY hh:mi:ss'), null);
 
+INSERT INTO Appointment VALUES(3, 2020, .20, 111223333, TO_DATE('03/05/2016 11:30:00', 'DD/MM/YYYY hh:mi:ss'), 
+TO_DATE('03/05/2018 02:30:00', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('04/05/2016 11:30:00', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Appointment VALUES(4, 1000, .20, 111223333, TO_DATE('04/06/2016 11:30:00', 'DD/MM/YYYY hh:mi:ss'), 
+TO_DATE('09/07/2016 02:30:00', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('04/02/2017 11:30:00', 'DD/MM/YYYY hh:mi:ss'));
+
+INSERT INTO Appointment VALUES(5, 200, .20, 304421202, TO_DATE('21/09/2015 11:30:00', 'DD/MM/YYYY hh:mi:ss'), 
+TO_DATE('21/01/2016 02:30:00', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('03/03/2016 11:30:00', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Appointment VALUES(6, 23481, .20, 304421202, TO_DATE('03/03/2016 11:30:00', 'DD/MM/YYYY hh:mi:ss'), 
+TO_DATE('03/06/2016 02:30:00', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('03/05/2017 11:30:00', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Appointment VALUES(7, 1002, .20, 304421202, TO_DATE('03/05/2017 11:30:00', 'DD/MM/YYYY hh:mi:ss'), 
+TO_DATE('03/05/2017 02:30:00', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('04/05/2018 11:30:00', 'DD/MM/YYYY hh:mi:ss'));
+
+INSERT INTO Appointment VALUES(8, 3838, .20, 789421554, TO_DATE('01/01/2010 11:30:00', 'DD/MM/YYYY hh:mi:ss'), 
+TO_DATE('03/03/2010 02:30:00', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('04/05/2013 11:30:00', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Appointment VALUES(9, 4000, .20, 789421554, TO_DATE('04/05/2013 11:30:00', 'DD/MM/YYYY hh:mi:ss'), 
+TO_DATE('03/09/2013 02:30:00', 'DD/MM/YYYY hh:mi:ss'), null);
+
+INSERT INTO Appointment VALUES(10, 5000, .20, 202421234, TO_DATE('01/12/2015 11:30:00', 'DD/MM/YYYY hh:mi:ss'), 
+TO_DATE('09/12/2015 02:30:00', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('03/02/2016 11:30:00', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Appointment VALUES(11, 1802, .20, 202421234, TO_DATE('03/02/2016 11:30:00', 'DD/MM/YYYY hh:mi:ss'), 
+TO_DATE('03/02/2016 02:30:00', 'DD/MM/YYYY hh:mi:ss'), null);
+
+INSERT INTO Appointment VALUES(12, 9000, .20, 012421290, TO_DATE('05/05/2015 11:30:00', 'DD/MM/YYYY hh:mi:ss'), 
+TO_DATE('03/05/2016 02:30:00', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('03/09/2016 11:30:00', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Appointment VALUES(13, 8563, .20, 012421290, TO_DATE('03/09/2016 11:30:00', 'DD/MM/YYYY hh:mi:ss'), 
+TO_DATE('03/09/2016 02:30:00', 'DD/MM/YYYY hh:mi:ss'), null);
+
+INSERT INTO Appointment VALUES(14, 1314, .20, 101208888, TO_DATE('01/02/2015 08:30:00', 'DD/MM/YYYY hh:mi:ss'), 
+TO_DATE('01/02/2015 05:30:00', 'DD/MM/YYYY hh:mi:ss'), null);
+INSERT INTO Appointment VALUES(15, 1872, .20, 605421664, TO_DATE('03/05/2015 12:30:00', 'DD/MM/YYYY hh:mi:ss'), 
+TO_DATE('03/05/2015 09:30:00', 'DD/MM/YYYY hh:mi:ss'), null);
+INSERT INTO Appointment VALUES(16, 1492, .20, 123428923, TO_DATE('01/09/2010 06:30:00', 'DD/MM/YYYY hh:mi:ss'), 
+TO_DATE('03/09/2010 10:30:00', 'DD/MM/YYYY hh:mi:ss'), null);
+
 INSERT INTO AptRoom VALUES(1, 1, TO_DATE('17/12/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('17/12/2014 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
 
-INSERT INTO Examine VALUES(1, 1, 'hes dead');
+INSERT INTO Examine VALUES(1, 3, 'ok');
+INSERT INTO Examine VALUES(2, 4, 'good vitals');
+INSERT INTO Examine VALUES(2, 3, 'high blood pressure');
+INSERT INTO Examine VALUES(2, 1, 'high blood sugar');
+INSERT INTO Examine VALUES(8, 5, 'stable condition');
+INSERT INTO Examine VALUES(8, 6, 'joint pain');
+INSERT INTO Examine VALUES(8, 7, 'headache');
+INSERT INTO Examine VALUES(9, 4, 'heartburn');
+INSERT INTO Examine VALUES(9, 3, 'hyperactive');
+INSERT INTO Examine VALUES(1, 5, 'dry eyes');
+INSERT INTO Examine VALUES(1, 16, 'low blood pressure');
+INSERT INTO Examine VALUES(1, 7, 'fast heart rate');
+INSERT INTO Examine VALUES(10, 5, 'back pain');
+INSERT INTO Examine VALUES(5, 6, 'back pain');
+INSERT INTO Examine VALUES(3, 7, 'back pain');
+INSERT INTO Examine VALUES(5, 4, 'joint pain');
+INSERT INTO Examine VALUES(5, 5, 'joint pain');
+INSERT INTO Examine VALUES(5, 16, 'joint pain');
+INSERT INTO Examine VALUES(5, 7, 'joint pain');
+INSERT INTO Examine VALUES(1, 6, 'arthritis');
+INSERT INTO Examine VALUES(4, 8, 'doing well');
+INSERT INTO Examine VALUES(6, 9, 'doing well');
+INSERT INTO Examine VALUES(10, 10, 'doing well');
+INSERT INTO Examine VALUES(9, 11, 'doing well');
+INSERT INTO Examine VALUES(5, 12, 'doing well');
+INSERT INTO Examine VALUES(8, 13, 'doing well');
+INSERT INTO Examine VALUES(2, 14, 'doing well');
+INSERT INTO Examine VALUES(3, 15, 'doing well');
+INSERT INTO Examine VALUES(4, 16, 'doing well');
+
+
+
+
+
+
+
+
+
 
 
 /* PART 2 - SQL QUERIES*/
 
 /*For a given division manager (say, ID = 10), report all regular employees 
 that are supervised by this manager. Display the employees ID, names, and salary.*/
+/* All division manager IDs are in 200 range*/
 SELECT ID, firstName, lastName, salary
 FROM Employee 
-WHERE Employee.managerID = 10;
+WHERE Employee.managerID = 200;
 
 /*Report the number of visits done for each patient, 
 i.e., for each patient, report the patient SSN, first and last names, and the count of visits done by this patient.*/  
-SELECT P.SSN, P.firstName, P.lastName, COUNT(A.AptID) AS NumVisits
-FROM Patient AS P, Appointment AS A
-WHERE P.SSN = A.patientSSN
-GROUP BY A.patientSSN;
+SELECT P.SSN, P.firstName, P.lastName, q.NumVisits
+FROM Patient P, 
+	(SELECT A.patientSSN, COUNT(A.AptID) as NumVisits
+	FROM Appointment A
+	GROUP BY A.patientSSN) q
+WHERE P.SSN = q.patientSSN;
 
 /*Report the employee who has access to the largest number of rooms. 
 We need the employee ID, and the number of rooms (s)he can access.
 Note: If there are several employess with the same maximum number, then report all of these employees.*/
-/*
-SELECT cnt.empID, MAX(cnt.NumRooms) AS RoomCount
-FROM
-(
-	SELECT A.empID, COUNT(A.RoomNumber) AS NumRooms
-	FROM empAccess AS A
-	GROUP BY A.empID
-) AS cnt
-WHERE cnt.NumRooms = MAX(NumRooms);
-*/
-SELECT A.empID
-FROM empAccess AS A
-GROUP BY A.empID
-HAVING COUNT(A.RoomNumber) = MAX(COUNT(A.RoomNumber));
+
+SELECT eA.empID, COUNT(eA.RoomNumber) RoomCount
+FROM empAccess eA
+GROUP BY eA.empID
+HAVING COUNT(eA.RoomNumber) = 
+    (SELECT Max(NumRooms) as m
+        FROM (
+        	SELECT COUNT(A.RoomNumber) as NumRooms
+        	FROM empAccess A
+        	GROUP BY A.empID) cnt
+        );
 
 /* For patients who have a scheduled future visit (which is part of their most recent visit), report that patient 
 (SSN, and first and last names) and the visit date. Do not report patients who do not have scheduled visit.*/
 
-SELECT P.SSN, P.firstName, P.lastName, A.aptDate 
-FROM Patient AS P, Appointment AS A
-WHERE P.SSN = A.patientSSN AND A.futureAptID IS NOT NULL;
+SELECT P.SSN, P.firstName, P.lastName, A.futureAptDate 
+FROM Patient P, Appointment A
+WHERE P.SSN = A.patientSSN AND A.futureAptDate IS NOT NULL;
 
 /*Q10: Report the date of the coming future visit for patient with SSN = 111-22-3333.
 Note: This date should exist in the last (most recent) visit of that patient.*/
-SELECT A.futureAptDate 
-FROM Appointment AS A
-WHERE A.patientSSN = 111223333;
+SELECT Ap.futureAptDate  
+FROM Appointment Ap 
+WHERE Ap.patientSSN = 111223333 
+AND Ap.AptID = (SELECT MAX(q.AptID)
+                FROM (
+                SELECT A.AptID
+	            FROM Appointment A 
+	            WHERE A.patientSSN=111223333) q);
 
 /*Report the equipment types (only the ID) for which the hospital has purchased equipments (units)
  in both 2010 and 2011. Do not report duplication.*/
