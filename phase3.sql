@@ -21,6 +21,7 @@ CREATE TABLE Employee(
 	salary REAL DEFAULT 0, 
 	officeNumber INTEGER NOT NULL, 
 	jobTitle VARCHAR2(20),  
+	rank INTEGER,
 	firstName VARCHAR2(20),  
 	lastName VARCHAR2(20), 
 	managerID INTEGER, 
@@ -127,38 +128,38 @@ CREATE TABLE Examine(
 /* PART 3 - POPULATE THE DATABASE */
 
 
-INSERT INTO Employee VALUES(300, 80000, 300, 'GeneralManager','Rodica', 'Neamtu', NULL);
-INSERT INTO Employee VALUES(301, 80000, 300, 'GeneralManager','Pablo', 'Picasso', NULL);
-INSERT INTO Employee VALUES(302, 80000, 300, 'GeneralManager','Freddie', 'Mercury', NULL);
+INSERT INTO Employee VALUES(300, 80000, 300, 'GeneralManager', 2, 'Rodica', 'Neamtu', NULL);
+INSERT INTO Employee VALUES(301, 80000, 300, 'GeneralManager', 2, 'Pablo', 'Picasso', NULL);
+INSERT INTO Employee VALUES(302, 80000, 300, 'GeneralManager', 2, 'Freddie', 'Mercury', NULL);
 
-INSERT INTO Employee VALUES(200, 80000, 200, 'DivisionManager','Dan', 'Song', 300);
-INSERT INTO Employee VALUES(201, 80000, 200, 'DivisionManager','Elaine', 'Smith', 300);
-INSERT INTO Employee VALUES(202, 80000, 200, 'DivisionManager','David', 'Bowie', 300);
-INSERT INTO Employee VALUES(203, 80000, 200, 'DivisionManager','Frida', 'Kahlo', 301);
-INSERT INTO Employee VALUES(204, 80000, 200, 'DivisionManager','John', 'Lennon', 301);
-INSERT INTO Employee VALUES(205, 80000, 200, 'DivisionManager','Margaret', 'Thatcher', 302);
-INSERT INTO Employee VALUES(206, 120000, 202, 'DivisionManager','Trevor', 'Valcourt', 300);
-INSERT INTO Employee VALUES(207, 110000, 201, 'DivisionManager','Ryan', 'Cooney', 300);
-INSERT INTO Employee VALUES(208, 80000, 200, 'DivisionManager','Dan', 'Song', 300);
+INSERT INTO Employee VALUES(200, 80000, 200, 'DivisionManager', 1, 'Dan', 'Song', 300);
+INSERT INTO Employee VALUES(201, 80000, 200, 'DivisionManager', 1, 'Elaine', 'Smith', 300);
+INSERT INTO Employee VALUES(202, 80000, 200, 'DivisionManager', 1, 'David', 'Bowie', 300);
+INSERT INTO Employee VALUES(203, 80000, 200, 'DivisionManager', 1, 'Frida', 'Kahlo', 301);
+INSERT INTO Employee VALUES(204, 80000, 200, 'DivisionManager', 1, 'John', 'Lennon', 301);
+INSERT INTO Employee VALUES(205, 80000, 200, 'DivisionManager', 1, 'Margaret', 'Thatcher', 302);
+INSERT INTO Employee VALUES(206, 120000, 202, 'DivisionManager', 1, 'Trevor', 'Valcourt', 300);
+INSERT INTO Employee VALUES(207, 110000, 201, 'DivisionManager', 1, 'Ryan', 'Cooney', 300);
+INSERT INTO Employee VALUES(208, 80000, 200, 'DivisionManager', 1, 'Dan', 'Song', 300);
 
-INSERT INTO Employee VALUES(100, 80000, 100, 'Regular','Stan', 'Smith', 200); 
-INSERT INTO Employee VALUES(101, 80000, 100, 'Regular','Jackie', 'Chan', 200); 
-INSERT INTO Employee VALUES(102, 80000, 100, 'Regular','Patrick', 'Star', 201); 
-INSERT INTO Employee VALUES(103, 80000, 100, 'Regular','Robert', 'Sponge', 202); 
-INSERT INTO Employee VALUES(104, 80000, 100, 'Regular','Julia', 'Roberts', 203); 
-INSERT INTO Employee VALUES(105, 80000, 100, 'Regular','Meryl', 'Priest', 204); 
-INSERT INTO Employee VALUES(106, 80000, 100, 'Regular','Daniella', 'Rodriguez', 205); 
-INSERT INTO Employee VALUES(107, 80000, 100, 'Regular','Eric', 'Jones', 203); 
-INSERT INTO Employee VALUES(108, 80000, 100, 'Regular','Sylvia', 'Jackson', 203); 
-INSERT INTO Employee VALUES(109, 80000, 100, 'Regular','Jennifer', 'Michaels', 201); 
-INSERT INTO Employee VALUES(110, 80000, 100, 'Regular','Alan', 'Poe', 202); 
-INSERT INTO Employee VALUES(111, 80000, 100, 'Regular','Jack', 'London', 204); 
-INSERT INTO Employee VALUES(112, 100000, 105, 'Regular','Toph', 'Aldenderfer', 201);
-INSERT INTO Employee VALUES(113, 62000, 104, 'Regular','Mango', 'Marquez', 200);
-INSERT INTO Employee VALUES(114, 50000, 103, 'Regular','Stan', 'Go', 200);	
-INSERT INTO Employee VALUES(115, 100000, 102, 'Regular','Robert', 'Scarduzio', 201);
-INSERT INTO Employee VALUES(116, 70000, 101, 'Regular','Mike', 'Ross', 200);
-INSERT INTO Employee VALUES(117, 80000, 100, 'Regular','Stan', 'Smith', 200);
+INSERT INTO Employee VALUES(100, 80000, 100, 'Regular', 0, 'Stan', 'Smith', 200); 
+INSERT INTO Employee VALUES(101, 80000, 100, 'Regular', 0, 'Jackie', 'Chan', 200); 
+INSERT INTO Employee VALUES(102, 80000, 100, 'Regular', 0, 'Patrick', 'Star', 201); 
+INSERT INTO Employee VALUES(103, 80000, 100, 'Regular', 0, 'Robert', 'Sponge', 202); 
+INSERT INTO Employee VALUES(104, 80000, 100, 'Regular', 0, 'Julia', 'Roberts', 203); 
+INSERT INTO Employee VALUES(105, 80000, 100, 'Regular', 0, 'Meryl', 'Priest', 204); 
+INSERT INTO Employee VALUES(106, 80000, 100, 'Regular', 0, 'Daniella', 'Rodriguez', 205); 
+INSERT INTO Employee VALUES(107, 80000, 100, 'Regular', 0, 'Eric', 'Jones', 203); 
+INSERT INTO Employee VALUES(108, 80000, 100, 'Regular', 0, 'Sylvia', 'Jackson', 203); 
+INSERT INTO Employee VALUES(109, 80000, 100, 'Regular', 0, 'Jennifer', 'Michaels', 201); 
+INSERT INTO Employee VALUES(110, 80000, 100, 'Regular', 0, 'Alan', 'Poe', 202); 
+INSERT INTO Employee VALUES(111, 80000, 100, 'Regular', 0, 'Jack', 'London', 204); 
+INSERT INTO Employee VALUES(112, 100000, 105, 'Regular', 0, 'Toph', 'Aldenderfer', 201);
+INSERT INTO Employee VALUES(113, 62000, 104, 'Regular', 0, 'Mango', 'Marquez', 200);
+INSERT INTO Employee VALUES(114, 50000, 103, 'Regular', 0, 'Stan', 'Go', 200);	
+INSERT INTO Employee VALUES(115, 100000, 102, 'Regular', 0, 'Robert', 'Scarduzio', 201);
+INSERT INTO Employee VALUES(116, 70000, 101, 'Regular', 0, 'Mike', 'Ross', 200);
+INSERT INTO Employee VALUES(117, 80000, 100, 'Regular', 0, 'Stan', 'Smith', 200);
 
 /* SELECT * FROM Employee; */
 
@@ -413,7 +414,7 @@ SELECT * FROM CriticalCases;
 GO
 
 
-CREATE VIEW DoctorsLoad(DoctorID, gender, load) AS 
+CREATE OR REPLACE VIEW DoctorsLoad(DoctorID, gender, load) AS 
 	(SELECT ID as DoctorID, gender, 'Underload' as load 
 	FROM Doctor D, Examine E
 	WHERE D.ID = E.docID
@@ -446,26 +447,30 @@ FROM DoctorsLoad DL, (SELECT X.Patient_SSN, E.result, E.docID
 WHERE DL.load = 'Underload' AND DL.DoctorID = Y.docID;
 
 CREATE OR REPLACE TRIGGER rServiceTrig
-AFTER UPDATE OR INSERT ON RoomService
-FOR EACH STATEMENT
+AFTER UPDATE OR INSERT ON roomService
+DECLARE
+	numS NUMBER;
 BEGIN
-	IF((SELECT count(*)
-		FROM RoomService RS
-		GROUP BY RS.roomNumber
-		HAVING count(RS.rService) > 3) > 0)
-		THEN RAISE_APPLICATION_ERROR (-20004, 'Rooms cannot have more than 3 services.');
+	SELECT COUNT(*) 
+	INTO numS
+	FROM roomService RS
+	GROUP BY RS.roomNumber
+	HAVING count(RS.rService) > 3;
+
+	IF numS > 0
+		THEN RAISE_APPLICATION_ERROR(-20000, 'Rooms cannot have more than 3 services.');
 	END IF;
 END;
 /
 
-
 CREATE OR REPLACE TRIGGER insTrig
-AFTER UPDATE OR INSERT ON Appointment
+BEFORE UPDATE OR INSERT ON Appointment
 FOR EACH ROW
 BEGIN
 	:new.insuranceCoverage := :new.totalPayment * .7;
 END;
 /
+
 
 CREATE OR REPLACE TRIGGER supervisorTrig
 AFTER UPDATE OR INSERT OR DELETE ON Employee
@@ -473,35 +478,60 @@ FOR EACH ROW
 DECLARE
 	manID number;
 	tRnk number;
+	diff number;
 	CURSOR Emp IS
-		SELECT E.managerID, E.rnk
+		SELECT E.managerID, E.rank
 		FROM Employee E
 		WHERE E.jobTitle != 'GeneralManager'
 BEGIN
 	OPEN Emp;
 	LOOP
-		FETCH Emp.managerID, Emp.rnk INTO manID, tRnk;
+		FETCH Emp.managerID, Emp.rank INTO manID, tRnk;
 		FETCH 
-		IF(manID is NULL) THEN RAISE_APPLICATION_ERROR (-20004, 'managerID cannot be null.');
+		IF manID is NULL
+			THEN RAISE_APPLICATION_ERROR (-20005, 'managerID cannot be null.');
 		END IF;
-		IF((SELECT count(*) FROM Employee E WHERE E.ID = manID) != 1)
-			THEN RAISE_APPLICATION_ERROR (-20004, 'manager must exist.');
+		SELECT count(*) INTO diff
+		FROM Employee E 
+		WHERE E.ID = manID
+		IF(diff != 1)
+			THEN RAISE_APPLICATION_ERROR (-20006, 'manager must exist.');
 		END IF;
-		IF((SELECT rnk FROM Employee E WHERE E.ID = manID) - tRnk != 1)
-			THEN RAISE_APPLICATION_ERROR (-20004, 'Rank mismatch.');
+		SELECT E.rank INTO diff
+		FROM Employee E 
+		WHERE E.ID = manID
+		IF(diff - tRnk != 1)
+			THEN RAISE_APPLICATION_ERROR (-20007, 'Rank mismatch.');
 		END IF;
 	END LOOP;
 	close Emp;
 END;
 /
 
+
 CREATE OR REPLACE TRIGGER MRITrig
-AFTER UPDATE OR INSERT ON Equipment, Unit
-FOR EACH STATEMENT
+AFTER UPDATE OR INSERT ON Equipment
+DECLARE
+	temp NUMBER;
 BEGIN
-	IF(SELECT *
-		FROM Equipment E, Unit U
-		WHERE E.ID = U.eqTypeID AND E.model = 'MRI' AND U.yearOfPurchase is not NULL AND U.yearOfPurchase > 2005)
+	SELECT COUNT(*) INTO temp
+	FROM Equipment E, Unit U
+	WHERE E.typeID = U.eqTypeID AND E.model = 'MRI' AND U.yearOfPurchase is not NULL AND U.yearOfPurchase > 2005;
+	IF temp > 0
+		THEN RAISE_APPLICATION_ERROR (-20004, 'MRI YoP must be after 2005.');
+	END IF;
+END;
+/
+
+CREATE OR REPLACE TRIGGER MRITrig
+AFTER UPDATE OR INSERT ON Unit
+DECLARE
+	temp NUMBER;
+BEGIN
+	SELECT COUNT(*) INTO temp
+	FROM Equipment E, Unit U
+	WHERE E.typeID = U.eqTypeID AND E.model = 'MRI' AND U.yearOfPurchase is not NULL AND U.yearOfPurchase > 2005;
+	IF temp > 0
 		THEN RAISE_APPLICATION_ERROR (-20004, 'MRI YoP must be after 2005.');
 	END IF;
 END;
