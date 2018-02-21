@@ -362,6 +362,8 @@ TO_DATE('03/09/2010 10:30:00', 'DD/MM/YYYY hh:mi:ss'), null);
 
 
 INSERT INTO AptRoom VALUES(1, 1, TO_DATE('17/12/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('17/12/2014 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO AptRoom VALUES(2, 10, TO_DATE('17/12/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('17/12/2014 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO AptRoom VALUES(3, 2, TO_DATE('17/12/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('17/12/2014 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
 
 INSERT INTO Examine VALUES(1, 3, 'ok');
 INSERT INTO Examine VALUES(2, 4, 'good vitals');
@@ -396,28 +398,111 @@ INSERT INTO Examine VALUES(4, 16, 'good heart rate');
 
 /* Part 1 */
 GO
-CREATE VIEW CriticalCases(Patient_SSN, firstName, lasName, numberOfAdmissionsToICU) AS 
+CREATE OR REPLACE VIEW CriticalCases(Patient_SSN, firstName, lastName, numberOfAdmissionsToICU) AS 
 	SELECT P.SSN, P.firstName, P.lastName, COUNT(*) as numberOfAdmissionsToICU
 	FROM Patient P, (SELECT A.patientSSN as patientSSN, A.aptID as aptID
 					FROM Appointment A
 					WHERE A.aptID in (SELECT AptID FROM AptRoom A WHERE A.roomNumber in 
-							(SELECT roomNumber FROM roomService WHERE rService = "ICU"))) apts
+							(SELECT roomNumber FROM roomService WHERE rService = 'ICU'))) apts
 	WHERE P.SSN = apts.patientSSN 
-	GROUP BY P.SSN 
-	HAVING COUNT(*) > 2; 
+	GROUP BY P.SSN, P.firstName, P.lastName
+	HAVING COUNT(*) > 1; 
+	
+SELECT * FROM CriticalCases;
+
 GO
+
+
 CREATE VIEW DoctorsLoad(DoctorID, gender, load) AS 
 	(SELECT ID as DoctorID, gender, 'Underload' as load 
 	FROM Doctor D, Examine E
 	WHERE D.ID = E.docID
-	GROUP BY  D.ID 
+	GROUP BY  D.ID, D.gender
 	HAVING COUNT(*) <= 10)
 	UNION
 	(SELECT ID as DoctorID, gender, 'Overload' as load 
 	FROM Doctor D, Examine E
 	WHERE D.ID = E.docID
-	GROUP BY  D.ID 
+	GROUP BY  D.ID, D.gender
 	HAVING COUNT(*) > 10);
-
-
 	
+SELECT * FROM DoctorsLoad;
+
+SELECT *
+FROM CriticalCases
+WHERE numberOfAdmissionsToICU > 4
+
+SELECT DoctorID, firstName, lastName
+FROM DoctorsLoad, Doctor
+WHERE Doctor.ID = DoctorsLoad.DoctorID AND DoctorsLoad.gender = "female"
+
+SELECT DL.DoctorID, Y.Patient_SSN, Y.cmnt
+FROM DoctorsLoads DL, (SELECT X.Patient_SSN, E.cmnt, E.docID
+						FROM Examine E, 
+							(SELECT A.ID CC.Patient_SSN 
+							FROM Appointment A, CriticalCases CC 
+							WHERE A.patientSSN = CC.Patient_SSN) X
+						WHERE X.ID = E.aptID) Y
+WHERE DL.load = "underloaded" AND DL.DoctorID = Y.docID
+
+CREATE OR REPLACE TRIGGER rServiceTrig
+AFTER UPDATE OR INSERT ON RoomService
+FOR EACH STATEMENT
+BEGIN
+	IF((SELECT count(*)
+		FROM RoomService RS
+		GROUP BY RS.roomNumber
+		HAVING count(RS.rService) > 3) > 0)
+		THEN RAISE_APPLICATION_ERROR (-20004, 'Rooms cannot have more than 3 services.');
+	END IF;
+END;
+/
+
+
+CREATE OR REPLACE TRIGGER insTrig
+AFTER UPDATE OR INSERT ON Appointment
+FOR EACH ROW
+BEGIN
+	:new.insuranceCoverage := :new.totalPayment * .7;
+END;
+/
+
+CREATE OR REPLACE TRIGGER supervisorTrig
+AFTER UPDATE OR INSERT OR DELETE ON Employee
+FOR EACH ROW
+DECLARE
+	manID number;
+	tRnk number;
+	CURSOR Emp IS
+		SELECT E.managerID, E.rnk
+		FROM Employee E
+		WHERE E.jobTitle != 'GeneralManager'
+BEGIN
+	OPEN Emp;
+	LOOP
+		FETCH Emp.managerID, Emp.rnk INTO manID, tRnk;
+		FETCH 
+		IF(manID is NULL) THEN RAISE_APPLICATION_ERROR (-20004, 'managerID cannot be null.');
+		END IF;
+		IF((SELECT count(*) FROM Employee E WHERE E.ID = manID) != 1)
+			THEN RAISE_APPLICATION_ERROR (-20004, 'manager must exist.');
+		END IF;
+		IF((SELECT rnk FROM Employee E WHERE E.ID = manID) - tRnk != 1)
+			THEN RAISE_APPLICATION_ERROR (-20004, 'Rank mismatch.');
+		END IF;
+	END LOOP;
+	close Emp;
+END;
+/
+
+CREATE OR REPLACE TRIGGER MRITrig
+AFTER UPDATE OR INSERT ON Equipment, Unit
+FOR EACH STATEMENT
+BEGIN
+	IF(SELECT *
+		FROM Equipment E, Unit U
+		WHERE E.ID = U.eqTypeID AND E.model = 'MRI' AND U.yearOfPurchase is not NULL AND U.yearOfPurchase > 2005)
+		THEN RAISE_APPLICATION_ERROR (-20004, 'MRI YoP must be after 2005.');
+	END IF;
+END;
+/
