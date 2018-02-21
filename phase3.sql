@@ -365,7 +365,7 @@ INSERT INTO AptRoom VALUES(1, 1, TO_DATE('17/12/2013 12:33:37', 'DD/MM/YYYY hh:m
 INSERT INTO AptRoom VALUES(2, 10, TO_DATE('17/12/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('17/12/2014 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
 INSERT INTO AptRoom VALUES(3, 2, TO_DATE('17/12/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('17/12/2014 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
 
-INSERT INTO Examine VALUES(1, 3, 'ok');
+INSERT INTO Examine VALUES(1, 2, 'ok');
 INSERT INTO Examine VALUES(2, 4, 'good vitals');
 INSERT INTO Examine VALUES(2, 3, 'high blood pressure');
 INSERT INTO Examine VALUES(2, 5, 'high blood sugar');
@@ -430,20 +430,20 @@ SELECT * FROM DoctorsLoad;
 
 SELECT *
 FROM CriticalCases
-WHERE numberOfAdmissionsToICU > 4
+WHERE numberOfAdmissionsToICU > 4;
 
 SELECT DoctorID, firstName, lastName
 FROM DoctorsLoad, Doctor
-WHERE Doctor.ID = DoctorsLoad.DoctorID AND DoctorsLoad.gender = "female"
+WHERE Doctor.ID = DoctorsLoad.DoctorID AND DoctorsLoad.gender = 'female';
 
-SELECT DL.DoctorID, Y.Patient_SSN, Y.cmnt
-FROM DoctorsLoads DL, (SELECT X.Patient_SSN, E.cmnt, E.docID
+SELECT DL.DoctorID, Y.Patient_SSN, Y.result
+FROM DoctorsLoad DL, (SELECT X.Patient_SSN, E.result, E.docID
 						FROM Examine E, 
-							(SELECT A.ID CC.Patient_SSN 
+							(SELECT A.aptID, CC.Patient_SSN 
 							FROM Appointment A, CriticalCases CC 
 							WHERE A.patientSSN = CC.Patient_SSN) X
-						WHERE X.ID = E.aptID) Y
-WHERE DL.load = "underloaded" AND DL.DoctorID = Y.docID
+						WHERE X.aptID = E.aptID) Y
+WHERE DL.load = 'Underload' AND DL.DoctorID = Y.docID;
 
 CREATE OR REPLACE TRIGGER rServiceTrig
 AFTER UPDATE OR INSERT ON RoomService
