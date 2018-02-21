@@ -471,6 +471,27 @@ BEGIN
 END;
 /
 
+CREATE OR REPLACE TRIGGER supervisorTrig
+AFTER UPDATE OR INSERT OR DELETE ON Employee
+FOR EACH ROW
+DECLARE
+	manID number;
+	tRnk number;
+	diff number;
+	CURSOR Emp IS
+		SELECT E.managerID, E.rank
+		FROM Employee E
+		WHERE E.jobTitle!='GeneralManager';
+BEGIN
+	OPEN Emp;
+	LOOP
+		/*FETCH Emp.managerID INTO manID;
+		FETCH Emp.rank INTO tRnk;*/
+	END LOOP;
+	CLOSE Emp;
+END;
+/
+
 
 CREATE OR REPLACE TRIGGER supervisorTrig
 AFTER UPDATE OR INSERT OR DELETE ON Employee

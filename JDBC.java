@@ -67,6 +67,8 @@ public class JDBC {
                 Timestamp faDate = rset.getTimestamp("futureAptDate");
                 System.out.println("AptID: " + ID + " Total Payment: " + tPay + " Insurance Coverage: " + insCov + " Patient SSN: " + SSN + " Admit Date: " + admitDate + " Leave Date: " + leaveDate+ " Future Appointment Date: " + faDate);
             }
+            str = "UPDATE Appointment";
+            stmt.executeQuery(str);
 
         }catch(Exception e){
             throw new Exception(e);
