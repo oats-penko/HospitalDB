@@ -1,6 +1,35 @@
 import java.sql.*;
+import java.util.Scanner;
 
 public class JDBC {
+    static void reporting(String username, String password, int num) throws Exception{
+        if(num != 1){
+            return;
+        }
+        try {
+            Scanner reader = new Scanner(System.in);  // Reading from System.in
+            System.out.println("Enter a patient's SSN: ");
+            int SSN = reader.nextInt(); // Scans the next token of the input as an int.
+            reader.close();
+            Class.forName("oracle.jdbc.driver.OracleDriver");
+            Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@oracle.wpi.edu:1521:orcl","dlsong","DLSONG");
+            Statement stmt = conn.createStatement();
+            String str = "SELECT * FROM Patient WHERE Patient.SSN=" + SSN;
+            ResultSet rset = stmt.executeQuery(str);
+            while(rset.next()){
+                long SSN2 = rset.getLong("SSN");
+                long pNum = rset.getLong("phoneNum");
+                String fName = rset.getString("firstName");
+                String lName = rset.getString("lastName");
+                String addr = rset.getString("addr");
+                System.out.println("SSN: " + SSN2 + " Phone Number: " + pNum + " First Name: " + fName + " Last Name: " + lName + " Address: " + addr);
+            }
+
+        }catch(Exception e){
+            throw new Exception(e);
+        }
+    }
+
     static void reporting(String username, String password) throws Exception{
         try {
             Class.forName("oracle.jdbc.driver.OracleDriver");
@@ -44,6 +73,10 @@ public class JDBC {
         }
     }
     public static void main(String args[]) throws Exception {
-        reporting("dlsong", "DLSONG");
+        if(args.length == 2)
+            reporting(args[0], args[1]);
+        else if(args.length == 3 && Integer.parseInt(args[2]) == 1){
+            reporting(args[0], args[1], 1);
+        }
     }
 }
