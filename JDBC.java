@@ -1,7 +1,7 @@
 import java.sql.*;
 
 public class JDBC {
-    void reporting(String username, String password){
+    static void reporting(String username, String password) throws Exception{
         try {
             Class.forName("oracle.jdbc.driver.OracleDriver");
             Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@oracle.wpi.edu:1521:orcl","dlsong","DLSONG");
@@ -9,8 +9,8 @@ public class JDBC {
             String str = "SELECT * FROM Patient";
             ResultSet rset = stmt.executeQuery(str);
             while(rset.next()){
-                int SSN = rset.getInt("SSN");
-                int pNum = rset.getInt("phoneNum");
+                long SSN = rset.getLong("SSN");
+                long pNum = rset.getLong("phoneNum");
                 String fName = rset.getString("firstName");
                 String lName = rset.getString("lastName");
                 String addr = rset.getString("addr");
@@ -19,7 +19,7 @@ public class JDBC {
             str = "SELECT * FROM Doctor";
             rset = stmt.executeQuery(str);
             while(rset.next()){
-                int ID = rset.getInt("ID");
+                long ID = rset.getInt("ID");
                 String spec = rset.getString("speciality");
                 String gender = rset.getString("gender");
                 String fName = rset.getString("firstName");
@@ -29,10 +29,10 @@ public class JDBC {
             str = "SELECT * FROM Appointment";
             rset = stmt.executeQuery(str);
             while(rset.next()){
-                int ID = rset.getInt("AptID");
-                int tPay = rset.getInt("totalPayment");
-                int insCov = rset.getInt("insuranceCoverage");
-                int SSN = rset.getInt("patientSSN");
+                long ID = rset.getLong("AptID");
+                long tPay = rset.getLong("totalPayment");
+                long insCov = rset.getLong("insuranceCoverage");
+                long SSN = rset.getLong("patientSSN");
                 Timestamp admitDate = rset.getTimestamp("admissionDate");
                 Timestamp leaveDate = rset.getTimestamp("leaveDate");
                 Timestamp faDate = rset.getTimestamp("futureAptDate");
@@ -40,17 +40,10 @@ public class JDBC {
             }
 
         }catch(Exception e){
-            System.out.println("Class not found");
+            throw new Exception(e);
         }
     }
-    public static void main(String args[]) {
-        try {
-            Class.forName("oracle.jdbc.driver.OracleDriver");
-            Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@oracle.wpi.edu:1521:orcl","dlsong","DLSONG");
-            Statement stmt = conn.createStatement();
-
-        }catch(Exception e){
-            System.out.println("Class not found");
-        }
+    public static void main(String args[]) throws Exception {
+        reporting("dlsong", "DLSONG");
     }
 }
