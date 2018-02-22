@@ -489,6 +489,7 @@ BEGIN
 		FETCH Emp.rank INTO tRnk;*/
 	END LOOP;
 	CLOSE Emp;
+	
 END;
 /
 
