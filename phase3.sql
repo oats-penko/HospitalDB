@@ -21,7 +21,6 @@ CREATE TABLE Employee(
 	salary REAL DEFAULT 0, 
 	officeNumber INTEGER NOT NULL, 
 	jobTitle VARCHAR2(20),  
-	rank INTEGER,
 	firstName VARCHAR2(20),  
 	lastName VARCHAR2(20), 
 	managerID INTEGER, 
@@ -128,38 +127,38 @@ CREATE TABLE Examine(
 /* PART 3 - POPULATE THE DATABASE */
 
 
-INSERT INTO Employee VALUES(300, 80000, 300, 'GeneralManager', 2, 'Rodica', 'Neamtu', NULL);
-INSERT INTO Employee VALUES(301, 80000, 300, 'GeneralManager', 2, 'Pablo', 'Picasso', NULL);
-INSERT INTO Employee VALUES(302, 80000, 300, 'GeneralManager', 2, 'Freddie', 'Mercury', NULL);
+INSERT INTO Employee VALUES(300, 80000, 300, 'GeneralManager','Rodica', 'Neamtu', NULL);
+INSERT INTO Employee VALUES(301, 80000, 300, 'GeneralManager','Pablo', 'Picasso', NULL);
+INSERT INTO Employee VALUES(302, 80000, 300, 'GeneralManager','Freddie', 'Mercury', NULL);
 
-INSERT INTO Employee VALUES(200, 80000, 200, 'DivisionManager', 1, 'Dan', 'Song', 300);
-INSERT INTO Employee VALUES(201, 80000, 200, 'DivisionManager', 1, 'Elaine', 'Smith', 300);
-INSERT INTO Employee VALUES(202, 80000, 200, 'DivisionManager', 1, 'David', 'Bowie', 300);
-INSERT INTO Employee VALUES(203, 80000, 200, 'DivisionManager', 1, 'Frida', 'Kahlo', 301);
-INSERT INTO Employee VALUES(204, 80000, 200, 'DivisionManager', 1, 'John', 'Lennon', 301);
-INSERT INTO Employee VALUES(205, 80000, 200, 'DivisionManager', 1, 'Margaret', 'Thatcher', 302);
-INSERT INTO Employee VALUES(206, 120000, 202, 'DivisionManager', 1, 'Trevor', 'Valcourt', 300);
-INSERT INTO Employee VALUES(207, 110000, 201, 'DivisionManager', 1, 'Ryan', 'Cooney', 300);
-INSERT INTO Employee VALUES(208, 80000, 200, 'DivisionManager', 1, 'Dan', 'Song', 300);
+INSERT INTO Employee VALUES(200, 80000, 200, 'DivisionManager','Dan', 'Song', 300);
+INSERT INTO Employee VALUES(201, 80000, 200, 'DivisionManager','Elaine', 'Smith', 300);
+INSERT INTO Employee VALUES(202, 80000, 200, 'DivisionManager','David', 'Bowie', 300);
+INSERT INTO Employee VALUES(203, 80000, 200, 'DivisionManager','Frida', 'Kahlo', 301);
+INSERT INTO Employee VALUES(204, 80000, 200, 'DivisionManager','John', 'Lennon', 301);
+INSERT INTO Employee VALUES(205, 80000, 200, 'DivisionManager','Margaret', 'Thatcher', 302);
+INSERT INTO Employee VALUES(206, 120000, 202, 'DivisionManager','Trevor', 'Valcourt', 300);
+INSERT INTO Employee VALUES(207, 110000, 201, 'DivisionManager','Ryan', 'Cooney', 300);
+INSERT INTO Employee VALUES(208, 80000, 200, 'DivisionManager','Dan', 'Song', 300);
 
-INSERT INTO Employee VALUES(100, 80000, 100, 'Regular', 0, 'Stan', 'Smith', 200); 
-INSERT INTO Employee VALUES(101, 80000, 100, 'Regular', 0, 'Jackie', 'Chan', 200); 
-INSERT INTO Employee VALUES(102, 80000, 100, 'Regular', 0, 'Patrick', 'Star', 201); 
-INSERT INTO Employee VALUES(103, 80000, 100, 'Regular', 0, 'Robert', 'Sponge', 202); 
-INSERT INTO Employee VALUES(104, 80000, 100, 'Regular', 0, 'Julia', 'Roberts', 203); 
-INSERT INTO Employee VALUES(105, 80000, 100, 'Regular', 0, 'Meryl', 'Priest', 204); 
-INSERT INTO Employee VALUES(106, 80000, 100, 'Regular', 0, 'Daniella', 'Rodriguez', 205); 
-INSERT INTO Employee VALUES(107, 80000, 100, 'Regular', 0, 'Eric', 'Jones', 203); 
-INSERT INTO Employee VALUES(108, 80000, 100, 'Regular', 0, 'Sylvia', 'Jackson', 203); 
-INSERT INTO Employee VALUES(109, 80000, 100, 'Regular', 0, 'Jennifer', 'Michaels', 201); 
-INSERT INTO Employee VALUES(110, 80000, 100, 'Regular', 0, 'Alan', 'Poe', 202); 
-INSERT INTO Employee VALUES(111, 80000, 100, 'Regular', 0, 'Jack', 'London', 204); 
-INSERT INTO Employee VALUES(112, 100000, 105, 'Regular', 0, 'Toph', 'Aldenderfer', 201);
-INSERT INTO Employee VALUES(113, 62000, 104, 'Regular', 0, 'Mango', 'Marquez', 200);
-INSERT INTO Employee VALUES(114, 50000, 103, 'Regular', 0, 'Stan', 'Go', 200);	
-INSERT INTO Employee VALUES(115, 100000, 102, 'Regular', 0, 'Robert', 'Scarduzio', 201);
-INSERT INTO Employee VALUES(116, 70000, 101, 'Regular', 0, 'Mike', 'Ross', 200);
-INSERT INTO Employee VALUES(117, 80000, 100, 'Regular', 0, 'Stan', 'Smith', 200);
+INSERT INTO Employee VALUES(100, 80000, 100, 'Regular','Stan', 'Smith', 200); 
+INSERT INTO Employee VALUES(101, 80000, 100, 'Regular','Jackie', 'Chan', 200); 
+INSERT INTO Employee VALUES(102, 80000, 100, 'Regular','Patrick', 'Star', 201); 
+INSERT INTO Employee VALUES(103, 80000, 100, 'Regular','Robert', 'Sponge', 202); 
+INSERT INTO Employee VALUES(104, 80000, 100, 'Regular','Julia', 'Roberts', 203); 
+INSERT INTO Employee VALUES(105, 80000, 100, 'Regular','Meryl', 'Priest', 204); 
+INSERT INTO Employee VALUES(106, 80000, 100, 'Regular','Daniella', 'Rodriguez', 205); 
+INSERT INTO Employee VALUES(107, 80000, 100, 'Regular','Eric', 'Jones', 203); 
+INSERT INTO Employee VALUES(108, 80000, 100, 'Regular','Sylvia', 'Jackson', 203); 
+INSERT INTO Employee VALUES(109, 80000, 100, 'Regular','Jennifer', 'Michaels', 201); 
+INSERT INTO Employee VALUES(110, 80000, 100, 'Regular','Alan', 'Poe', 202); 
+INSERT INTO Employee VALUES(111, 80000, 100, 'Regular','Jack', 'London', 204); 
+INSERT INTO Employee VALUES(112, 100000, 105, 'Regular','Toph', 'Aldenderfer', 201);
+INSERT INTO Employee VALUES(113, 62000, 104, 'Regular','Mango', 'Marquez', 200);
+INSERT INTO Employee VALUES(114, 50000, 103, 'Regular','Stan', 'Go', 200);	
+INSERT INTO Employee VALUES(115, 100000, 102, 'Regular','Robert', 'Scarduzio', 201);
+INSERT INTO Employee VALUES(116, 70000, 101, 'Regular','Mike', 'Ross', 200);
+INSERT INTO Employee VALUES(117, 80000, 100, 'Regular','Stan', 'Smith', 200);
 
 /* SELECT * FROM Employee; */
 
@@ -363,10 +362,8 @@ TO_DATE('03/09/2010 10:30:00', 'DD/MM/YYYY hh:mi:ss'), null);
 
 
 INSERT INTO AptRoom VALUES(1, 1, TO_DATE('17/12/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('17/12/2014 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO AptRoom VALUES(2, 10, TO_DATE('17/12/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('17/12/2014 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO AptRoom VALUES(3, 2, TO_DATE('17/12/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('17/12/2014 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
 
-INSERT INTO Examine VALUES(1, 2, 'ok');
+INSERT INTO Examine VALUES(1, 3, 'ok');
 INSERT INTO Examine VALUES(2, 4, 'good vitals');
 INSERT INTO Examine VALUES(2, 3, 'high blood pressure');
 INSERT INTO Examine VALUES(2, 5, 'high blood sugar');
@@ -399,34 +396,32 @@ INSERT INTO Examine VALUES(4, 16, 'good heart rate');
 
 /* Part 1 */
 GO
-CREATE OR REPLACE VIEW CriticalCases(Patient_SSN, firstName, lastName, numberOfAdmissionsToICU) AS 
+CREATE VIEW CriticalCases(Patient_SSN, firstName, lasName, numberOfAdmissionsToICU) AS 
 	SELECT P.SSN, P.firstName, P.lastName, COUNT(*) as numberOfAdmissionsToICU
 	FROM Patient P, (SELECT A.patientSSN as patientSSN, A.aptID as aptID
 					FROM Appointment A
 					WHERE A.aptID in (SELECT AptID FROM AptRoom A WHERE A.roomNumber in 
-							(SELECT roomNumber FROM roomService WHERE rService = 'ICU'))) apts
+							(SELECT roomNumber FROM roomService WHERE rService = "ICU"))) apts
 	WHERE P.SSN = apts.patientSSN 
-	GROUP BY P.SSN, P.firstName, P.lastName
-	HAVING COUNT(*) > 1; 
-	
-SELECT * FROM CriticalCases;
-
+	GROUP BY P.SSN 
+	HAVING COUNT(*) > 2; 
 GO
-
-
-CREATE OR REPLACE VIEW DoctorsLoad(DoctorID, gender, load) AS 
+CREATE VIEW DoctorsLoad(DoctorID, gender, load) AS 
 	(SELECT ID as DoctorID, gender, 'Underload' as load 
 	FROM Doctor D, Examine E
 	WHERE D.ID = E.docID
-	GROUP BY  D.ID, D.gender
+	GROUP BY  D.ID 
 	HAVING COUNT(*) <= 10)
 	UNION
 	(SELECT ID as DoctorID, gender, 'Overload' as load 
 	FROM Doctor D, Examine E
 	WHERE D.ID = E.docID
-	GROUP BY  D.ID, D.gender
+	GROUP BY  D.ID 
 	HAVING COUNT(*) > 10);
+
+
 	
+<<<<<<< HEAD
 SELECT * FROM DoctorsLoad;
 
 SELECT *
@@ -558,3 +553,5 @@ BEGIN
 	END IF;
 END;
 /
+=======
+>>>>>>> e115458780264f1afd813400aa9cc785268082af
