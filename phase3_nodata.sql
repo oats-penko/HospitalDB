@@ -145,7 +145,6 @@ INSERT INTO Room VALUES(300,1);
 
 INSERT INTO roomService VALUES(2, 'MRI'); 
 INSERT INTO roomService VALUES(2, 'OperatingRoom');
-INSERT INTO roomService VALUES(2, 'Bathrrom');
 INSERT INTO roomService VALUES(1, 'EmergencyRoom');
 INSERT INTO roomService VALUES(1, 'ICU');
 INSERT INTO roomService VALUES(1, 'Bathroom');
@@ -243,13 +242,14 @@ INSERT INTO AptRoom VALUES(3, 1, TO_DATE('23/05/2013 12:33:37', 'DD/MM/YYYY hh:m
 INSERT INTO AptRoom VALUES(4, 1, TO_DATE('24/05/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('24/05/2014 12:50:37', 'DD/MM/YYYY hh:mi:ss'));
 INSERT INTO AptRoom VALUES(14, 1, TO_DATE('24/05/2014 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('24/05/2015 12:50:37', 'DD/MM/YYYY hh:mi:ss'));
 INSERT INTO AptRoom VALUES(14, 4, TO_DATE('24/05/2018 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('24/05/2018 12:50:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO AptRoom VALUES(1, 4, TO_DATE('24/05/2018 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('24/05/2018 12:50:37', 'DD/MM/YYYY hh:mi:ss'));
 
 
 
 
 
 
-/* doctor David O'Neill and Julia Jones should be overloaded */
+
 INSERT INTO Examine VALUES(1, 1, 'ok');
 INSERT INTO Examine VALUES(1, 2, 'ok');
 INSERT INTO Examine VALUES(1, 3, 'ok');
@@ -290,7 +290,7 @@ INSERT INTO Examine VALUES(9, 4, 'heartburn');
 INSERT INTO Examine VALUES(9, 3, 'hyperactive');
 INSERT INTO Examine VALUES(9, 5, 'fatigued');
 INSERT INTO Examine VALUES(9, 1, 'fatigued');
-INSERT INTO Examine VALUES(18, 5, 'back pain');
+INSERT INTO Examine VALUES(10, 5, 'back pain');
 INSERT INTO Examine VALUES(3, 5, 'heartburn');
 
 
@@ -358,7 +358,7 @@ WHERE C.numberOfAdmissionsToICU > 4;
 /* Use the views created above (you may need the original tables as well) to report the female overloaded doctors. You should report the doctor ID, firstName, and lastName. */
 SELECT L.DoctorID, D.firstName, D.lastName 
 FROM DoctorsLoad L, Doctor D
-WHERE L.gender = 'female' AND L.load = 'Overloaded' L.DoctorID = D.ID;
+WHERE L.gender = 'female' AND L.load = 'Overloaded' and L.DoctorID = D.ID;
 
  /* Use the views created above (you may need the original tables as well) to report the comments 
  inserted by underloaded doctors when examining critical-case patients. You should report the doctor Id, patient SSN, and the comment. */
@@ -388,7 +388,7 @@ Sql> set serveroutput on;
 
 /* Any room in the hospital cannot offer more than three services. */
 CREATE OR REPLACE TRIGGER roomServices 
-	BEFORE INSERT OR UPDATE ON roomService
+	BEFORE INSERT ON roomService
 	FOR EACH ROW
 DECLARE 
 	numServices int;
@@ -421,21 +421,23 @@ CREATE OR REPLACE TRIGGER empManager
 	FOR EACH ROW
 	WHEN (new.jobTitle < 2)
 	DECLARE 
-	    managerTitle int;
+	    CURSOR manager(ID int) IS 
+	        SELECT * FROM Employee WHERE ID = ID;
+	   jobTitle int;
 BEGIN 
     IF :new.managerID IS NULL THEN
         RAISE_APPLICATION_ERROR(-20001, 'This employee must have a supervisor.');
     ELSE
-		SELECT E.jobTitle INTO managerTitle FROM Employee E WHERE E.ID = :new.managerID;
-		IF :new.jobTitle = 0 AND managerTitle != 1 THEN
-			RAISE_APPLICATION_ERROR(-20002, 'Regular employees must be supervised by a Division Manager.');
-		ELSIF :new.jobTitle = 1 AND managerTitle != 2 THEN
-			RAISE_APPLICATION_ERROR(-20003, 'Division managers must be supervised by a General Manager.');
-		END IF;
+		FOR man in manager(:new.managerID) LOOP
+    		IF :new.jobTitle = 0 AND jobTitle != 1 THEN
+    			RAISE_APPLICATION_ERROR(-20002, 'Regular employees must be supervised by a Division Manager.');
+    		ELSIF :new.jobTitle = 1 AND jobTitle != 2 THEN
+    			RAISE_APPLICATION_ERROR(-20003, 'Division managers must be supervised by a General Manager.');
+    		END IF;
+		END LOOP;
     END IF;
 END;
 /
-
 /* -If an equipment of type ‘MRI’, then the purchase year must be not null and after 2005. */
 CREATE OR REPLACE TRIGGER MRIPurchase 
 	BEFORE INSERT ON Unit
@@ -458,19 +460,21 @@ CREATE OR REPLACE TRIGGER futureVisitDate
 	BEFORE INSERT ON AptRoom  
 	FOR EACH ROW  
 	DECLARE 
-	    service VARCHAR(20);
+	    CURSOR services(roomNum int) IS 
+	        SELECT S.rService FROM roomService S WHERE S.roomNumber = roomNum;
 BEGIN   
-    SELECT S.rService INTO service FROM roomService S WHERE S.roomNumber = :new.roomNumber;
-    if (service = 'ICU') THEN
-        UPDATE Appointment A   
-        SET A.futureAptDate = ADD_MONTHS(:new.startDate, 3) 
-        WHERE A.AptID = :new.aptID;  
-    END IF;     
-      
+    FOR service in services(:new.roomNumber) LOOP 
+        IF service.rService = 'ICU' THEN
+            UPDATE Appointment A   
+            SET A.futureAptDate = ADD_MONTHS(:new.startDate, 3) 
+            WHERE A.AptID = :new.aptID;  
+        END IF;     
+    END LOOP;
 END;
 /
 /* -When a patient is admitted to the hospital, i.e., a new record is inserted into the Admission table; the system 
-should print out the names of the doctors who previously examined this patient (if any).
+should print out the names of the doctors who previously examined this patient (if any).SELECT A.patientSSN INTO SSN FROM Appointment A WHERE A.AptID = :new.AptID;
+	
 o Hint: Use function dbms_output.put_line() also make sure to run the following line so you can see the output lines. */
 
 CREATE OR REPLACE TRIGGER newAdmission 
@@ -492,9 +496,8 @@ CREATE OR REPLACE TRIGGER newAdmission
 	
 BEGIN 
 
-    SELECT A.patientSSN INTO SSN FROM Appointment A WHERE A.AptID = :new.AptID;
-	
-    FOR apt IN allApts(SSN) Loop
+    
+    FOR apt IN allApts(:new.PatientSSN) Loop
         FOR doc IN allDocs(apt.AptID) Loop
             DBMS_OUTPUT.PUT_LINE ('Name: ' || doc.LastName || ', ' || doc.firstName);
         END LOOP;
@@ -503,8 +506,9 @@ BEGIN
     
 END;
 /
+/* TEST TRIGGERS: */
 
-
+/* Regular and Division Manager Triggers: */
 INSERT INTO Employee VALUES(300, 80000, 300, 2,'Rodica', 'Neamtu', NULL);
 INSERT INTO Employee VALUES(301, 80000, 300, 2,'Pablo', 'Picasso', NULL);
 INSERT INTO Employee VALUES(302, 80000, 300, 2,'Freddie', 'Mercury', NULL);
@@ -543,26 +547,47 @@ UPDATE Employee
 SET managerID = NULL 
 WHERE ID = 200;
 
-/* TEST TRIGGERS: */
-
-
-/* Should throw an error: */
-INSERT INTO roomService VALUES(3, 'Cafe');
-
-
+/* MRI trigger */
+/* Should be inserted properly */
 INSERT INTO Equipment VALUES('MRI', 9, 'SS30', 'used for scans', 'operate wisely');
-
-
+INSERT INTO Equipment VALUES('CTScanner', 1, 'S123', 'used for scans', 'operate wisely');
 
 INSERT INTO Unit VALUES('1000', 'MRI', 1, 2013, TO_DATE('17/12/2011 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
 INSERT INTO Unit VALUES('1001', 'MRI', 2, 2010, TO_DATE('14/02/2010 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
 INSERT INTO Unit VALUES('1002', 'MRI', 4, 2007, TO_DATE('10/10/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
 INSERT INTO Unit VALUES('2000', 'MRI', 9, 2006, TO_DATE('01/01/2014 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
 INSERT INTO Unit VALUES('3001', 'MRI', 2, 2015, TO_DATE('04/12/2011 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
-
+INSERT INTO Unit VALUES('2001', 'CTScanner', 11, 2004, TO_DATE('17/12/2016 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
 /* SHOULD RETURN AN ERROR */
 INSERT INTO Unit VALUES('2001', 'MRI', 11, 2004, TO_DATE('17/12/2016 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
 INSERT INTO Unit VALUES('2002', 'MRI', 8, 2005, TO_DATE('17/12/2010 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
 INSERT INTO Unit VALUES('3000', 'MRI', 7, NULL, TO_DATE('17/12/2017 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
 INSERT INTO Unit VALUES('3002', 'MRI', 3, 2003, TO_DATE('17/12/2010 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+
+/* Room Service Trigger */
+/* Should throw an error: */
+INSERT INTO roomService VALUES(3, 'Cafe');
+/* Should be ok */
+INSERT INTO roomService VALUES(2, 'Bathroom');
+
+/* Insurance Trigger and new appointment */
+INSERT INTO Appointment VALUES(19, 1314, 400, 111223333, TO_DATE('01/02/2015 08:30:00', 'DD/MM/YYYY hh:mi:ss'), 
+TO_DATE('01/02/2015 05:30:00', 'DD/MM/YYYY hh:mi:ss'), null);
+INSERT INTO Appointment VALUES(20, 1872, 1000, 789421554, TO_DATE('03/05/2015 12:30:00', 'DD/MM/YYYY hh:mi:ss'), 
+TO_DATE('03/05/2020 09:30:00', 'DD/MM/YYYY hh:mi:ss'), null);
+
+/* new patient */
+INSERT INTO Appointment VALUES(21, 1492, 800, 000000000, TO_DATE('01/09/2010 06:30:00', 'DD/MM/YYYY hh:mi:ss'), 
+TO_DATE('03/09/2010 10:30:00', 'DD/MM/YYYY hh:mi:ss'), null);
+
+SELECT totalPayment, insuranceCoverage FROM Appointment WHERE AptID = 19;
+SELECT totalPayment, insuranceCoverage FROM Appointment WHERE AptID = 20;
+
+/* future visit date */
+INSERT INTO AptRoom VALUES(20, 1, TO_DATE('24/05/2018 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('24/05/2018 12:50:37', 'DD/MM/YYYY hh:mi:ss'));
+SELECT R.startDate as ICUEnter, A.futureAptDate as FutureAptDate
+FROM AptRoom R, Appointment A
+WHERE R.aptID = 20 AND A.AptID = 20;
+
+
 spool off
