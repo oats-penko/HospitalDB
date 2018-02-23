@@ -385,7 +385,7 @@ o If in your DB you store the insurance payment as a percent, then it should be 
 o Hint: Use function dbms_output.put_line() also make sure to run the following line so you can see the output lines.
 Sql> set serveroutput on;
 */
-
+set serveroutput on;
 /* Any room in the hospital cannot offer more than three services. */
 CREATE OR REPLACE TRIGGER roomServices 
 	BEFORE INSERT ON roomService
@@ -416,28 +416,27 @@ END;
 -Ensure that regular employees (with rank 0) must have their supervisors as division managers (with rank 1). Also each regular employee must have a supervisor at all times.
 -Similarly, division managers (with rank 1) must have their supervisors as general managers (with rank 2). Division managers must have supervisors at all times.
 */
-CREATE OR REPLACE TRIGGER empManager 
-	BEFORE INSERT OR UPDATE ON Employee
-	FOR EACH ROW
-	WHEN (new.jobTitle < 2)
-	DECLARE 
-	    CURSOR manager(ID int) IS 
-	        SELECT * FROM Employee WHERE ID = ID;
-	   jobTitle int;
-BEGIN 
-    IF :new.managerID IS NULL THEN
-        RAISE_APPLICATION_ERROR(-20001, 'This employee must have a supervisor.');
-    ELSE
-		FOR man in manager(:new.managerID) LOOP
-    		IF :new.jobTitle = 0 AND jobTitle != 1 THEN
-    			RAISE_APPLICATION_ERROR(-20002, 'Regular employees must be supervised by a Division Manager.');
-    		ELSIF :new.jobTitle = 1 AND jobTitle != 2 THEN
-    			RAISE_APPLICATION_ERROR(-20003, 'Division managers must be supervised by a General Manager.');
-    		END IF;
-		END LOOP;
-    END IF;
-END;
-/
+CREATE OR REPLACE TRIGGER empManager  
+	BEFORE INSERT OR UPDATE ON Employee 
+	FOR EACH ROW 
+	WHEN (new.jobTitle < 2) 
+	DECLARE  
+	    CURSOR managerTitle(mID int) IS  
+	        SELECT * FROM Employee WHERE ID = mID; 
+		PRAGMA autonomous_transaction;
+BEGIN  
+    IF :new.managerID IS NULL THEN 
+        RAISE_APPLICATION_ERROR(-20001, 'This employee must have a supervisor.'); 
+    ELSE 
+		FOR man in managerTitle(:new.managerID) LOOP 
+    		IF :new.jobTitle = 0 AND man.jobTitle != 1 THEN 
+    			RAISE_APPLICATION_ERROR(-20002, 'Regular employees must be supervised by a Division Manager.'); 
+    		ELSIF :new.jobTitle = 1 AND man.jobTitle != 2 THEN 
+    			RAISE_APPLICATION_ERROR(-20003, 'Division managers must be supervised by a General Manager.'); 
+    		END IF; 
+		END LOOP; 
+    END IF; 
+END; 
 /* -If an equipment of type ‘MRI’, then the purchase year must be not null and after 2005. */
 CREATE OR REPLACE TRIGGER MRIPurchase 
 	BEFORE INSERT ON Unit
@@ -584,10 +583,10 @@ SELECT totalPayment, insuranceCoverage FROM Appointment WHERE AptID = 19;
 SELECT totalPayment, insuranceCoverage FROM Appointment WHERE AptID = 20;
 
 /* future visit date */
-INSERT INTO AptRoom VALUES(20, 1, TO_DATE('24/05/2018 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('24/05/2018 12:50:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO AptRoom VALUES(4, 1, TO_DATE('24/05/2018 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('24/05/2018 12:50:37', 'DD/MM/YYYY hh:mi:ss'));
 SELECT R.startDate as ICUEnter, A.futureAptDate as FutureAptDate
 FROM AptRoom R, Appointment A
-WHERE R.aptID = 20 AND A.AptID = 20;
+WHERE R.aptID = 4 AND A.AptID = 4;
 
 
 spool off
