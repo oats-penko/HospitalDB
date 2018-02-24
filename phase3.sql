@@ -1,7 +1,8 @@
-/* Phase 2
+﻿/* Phase 3
 -----
 Alissa Ostapenko 
 Daniel Song */
+spool phase3_out.txt
 DROP TABLE roomService;
 DROP TABLE empAccess;
 DROP TABLE Examine;
@@ -20,13 +21,12 @@ CREATE TABLE Employee(
 	ID INTEGER PRIMARY KEY, 
 	salary REAL DEFAULT 0, 
 	officeNumber INTEGER NOT NULL, 
-	jobTitle VARCHAR2(20),  
+	jobTitle INTEGER NOT NULL,  
 	firstName VARCHAR2(20),  
 	lastName VARCHAR2(20), 
 	managerID INTEGER, 
-	CONSTRAINT manager_FK FOREIGN KEY (managerID) REFERENCES Employee(ID) 
-	    ON DELETE CASCADE, 
-	CONSTRAINT jobPsn CHECK (jobTitle in ('Regular', 'DivisionManager', 'GeneralManager')) 
+	CONSTRAINT manager_FK FOREIGN KEY (managerID) REFERENCES Employee(ID),
+	CONSTRAINT jobPsn CHECK (jobTitle in (0, 1, 2))
 );
 
 CREATE TABLE Room( 
@@ -54,7 +54,7 @@ CREATE TABLE roomService(
 );
 
 CREATE TABLE Equipment ( 
-	typeID INTEGER PRIMARY KEY,  
+	typeID VARCHAR2(30) PRIMARY KEY,  
 	numberOfUnits INTEGER DEFAULT 0, 
 	model VARCHAR2(20),  
 	eqDescr VARCHAR2(100),  
@@ -63,7 +63,7 @@ CREATE TABLE Equipment (
 
 CREATE TABLE Unit( 
 	serialNumber VARCHAR2(20) PRIMARY KEY, 
-	eqTypeID INTEGER NOT NULL,  
+	eqtypeID VARCHAR2(30) NOT NULL,  
 	roomNumber INTEGER NOT NULL, 
 	yearOfPurchase INTEGER NOT NULL,  
 	lastInspectionTime DATE, 
@@ -86,7 +86,8 @@ CREATE TABLE Doctor(
 	speciality VARCHAR2(31), 
 	gender VARCHAR2(15), 
 	firstName VARCHAR2(63), 
-	lastName VARCHAR2(63) 
+	lastName VARCHAR2(63), 
+	CONSTRAINT genderVals CHECK (gender in ('female', 'male', 'other'))
 );
 
 CREATE TABLE Appointment( 
@@ -94,11 +95,10 @@ CREATE TABLE Appointment(
 	totalPayment NUMBER(38, 2),  
 	insuranceCoverage NUMBER(38,2),  
 	patientSSN INTEGER NOT NULL, 
-	admissionDate TIMESTAMP, 
-	leaveDate TIMESTAMP,  
-	futureAptDate TIMESTAMP, 
+	admissionDate DATE, 
+	leaveDate DATE,  
+	futureAptDate DATE, 
 	CONSTRAINT patient_FK FOREIGN KEY (patientSSN) REFERENCES Patient(SSN) 
-	    ON DELETE CASCADE 
 );
 
 CREATE TABLE AptRoom( 
@@ -124,43 +124,6 @@ CREATE TABLE Examine(
 	CONSTRAINT examine_PK PRIMARY KEY(docID, aptID) 
 );
 
-/* PART 3 - POPULATE THE DATABASE */
-
-
-INSERT INTO Employee VALUES(300, 80000, 300, 'GeneralManager','Rodica', 'Neamtu', NULL);
-INSERT INTO Employee VALUES(301, 80000, 300, 'GeneralManager','Pablo', 'Picasso', NULL);
-INSERT INTO Employee VALUES(302, 80000, 300, 'GeneralManager','Freddie', 'Mercury', NULL);
-
-INSERT INTO Employee VALUES(200, 80000, 200, 'DivisionManager','Dan', 'Song', 300);
-INSERT INTO Employee VALUES(201, 80000, 200, 'DivisionManager','Elaine', 'Smith', 300);
-INSERT INTO Employee VALUES(202, 80000, 200, 'DivisionManager','David', 'Bowie', 300);
-INSERT INTO Employee VALUES(203, 80000, 200, 'DivisionManager','Frida', 'Kahlo', 301);
-INSERT INTO Employee VALUES(204, 80000, 200, 'DivisionManager','John', 'Lennon', 301);
-INSERT INTO Employee VALUES(205, 80000, 200, 'DivisionManager','Margaret', 'Thatcher', 302);
-INSERT INTO Employee VALUES(206, 120000, 202, 'DivisionManager','Trevor', 'Valcourt', 300);
-INSERT INTO Employee VALUES(207, 110000, 201, 'DivisionManager','Ryan', 'Cooney', 300);
-INSERT INTO Employee VALUES(208, 80000, 200, 'DivisionManager','Dan', 'Song', 300);
-
-INSERT INTO Employee VALUES(100, 80000, 100, 'Regular','Stan', 'Smith', 200); 
-INSERT INTO Employee VALUES(101, 80000, 100, 'Regular','Jackie', 'Chan', 200); 
-INSERT INTO Employee VALUES(102, 80000, 100, 'Regular','Patrick', 'Star', 201); 
-INSERT INTO Employee VALUES(103, 80000, 100, 'Regular','Robert', 'Sponge', 202); 
-INSERT INTO Employee VALUES(104, 80000, 100, 'Regular','Julia', 'Roberts', 203); 
-INSERT INTO Employee VALUES(105, 80000, 100, 'Regular','Meryl', 'Priest', 204); 
-INSERT INTO Employee VALUES(106, 80000, 100, 'Regular','Daniella', 'Rodriguez', 205); 
-INSERT INTO Employee VALUES(107, 80000, 100, 'Regular','Eric', 'Jones', 203); 
-INSERT INTO Employee VALUES(108, 80000, 100, 'Regular','Sylvia', 'Jackson', 203); 
-INSERT INTO Employee VALUES(109, 80000, 100, 'Regular','Jennifer', 'Michaels', 201); 
-INSERT INTO Employee VALUES(110, 80000, 100, 'Regular','Alan', 'Poe', 202); 
-INSERT INTO Employee VALUES(111, 80000, 100, 'Regular','Jack', 'London', 204); 
-INSERT INTO Employee VALUES(112, 100000, 105, 'Regular','Toph', 'Aldenderfer', 201);
-INSERT INTO Employee VALUES(113, 62000, 104, 'Regular','Mango', 'Marquez', 200);
-INSERT INTO Employee VALUES(114, 50000, 103, 'Regular','Stan', 'Go', 200);	
-INSERT INTO Employee VALUES(115, 100000, 102, 'Regular','Robert', 'Scarduzio', 201);
-INSERT INTO Employee VALUES(116, 70000, 101, 'Regular','Mike', 'Ross', 200);
-INSERT INTO Employee VALUES(117, 80000, 100, 'Regular','Stan', 'Smith', 200);
-
-/* SELECT * FROM Employee; */
 
 INSERT INTO Room VALUES(1,0);
 INSERT INTO Room VALUES(2,1);
@@ -177,35 +140,6 @@ INSERT INTO Room VALUES(100,0);
 INSERT INTO Room VALUES(200,1);
 INSERT INTO Room VALUES(300,1);
 
-/* SELECT * FROM Room; */
-
-INSERT INTO empAccess VALUES(100, 1);
-INSERT INTO empAccess VALUES(100, 2);
-INSERT INTO empAccess VALUES(200, 2);
-INSERT INTO empAccess VALUES(300, 2);
-INSERT INTO empAccess VALUES(300, 3);
-INSERT INTO empAccess VALUES(101, 2);
-INSERT INTO empAccess VALUES(102, 3);
-INSERT INTO empAccess VALUES(103, 4);
-INSERT INTO empAccess VALUES(104, 5);
-INSERT INTO empAccess VALUES(105, 6);
-INSERT INTO empAccess VALUES(106, 7);
-INSERT INTO empAccess VALUES(107, 7);
-INSERT INTO empAccess VALUES(108, 8);
-INSERT INTO empAccess VALUES(109, 9);
-INSERT INTO empAccess VALUES(110, 10);
-INSERT INTO empAccess VALUES(111, 11);
-INSERT INTO empAccess VALUES(300, 1);
-INSERT INTO empAccess VALUES(300, 4);
-INSERT INTO empAccess VALUES(301, 5);
-INSERT INTO empAccess VALUES(301, 6);
-INSERT INTO empAccess VALUES(301, 7);
-INSERT INTO empAccess VALUES(301, 8);
-INSERT INTO empAccess VALUES(302, 9);
-INSERT INTO empAccess VALUES(302, 10);
-INSERT INTO empAccess VALUES(302, 11);
-
-/* SELECT * FROM empAccess; */
 
 INSERT INTO roomService VALUES(2, 'MRI'); 
 INSERT INTO roomService VALUES(2, 'OperatingRoom');
@@ -215,63 +149,7 @@ INSERT INTO roomService VALUES(1, 'Bathroom');
 INSERT INTO roomService VALUES(3, 'InformationCenter');
 INSERT INTO roomService VALUES(3, 'WaitingArea');
 INSERT INTO roomService VALUES(3, 'Bathroom');
-INSERT INTO roomService VALUES(3, 'Cafe');
-INSERT INTO roomService VALUES(4, 'MRI');
-INSERT INTO roomService VALUES(5, 'X-Ray');
-INSERT INTO roomService VALUES(6, 'OperatingRoom');
-INSERT INTO roomService VALUES(7, 'Cafe');
-INSERT INTO roomService VALUES(8, 'Nursery');
-INSERT INTO roomService VALUES(9, 'CTScan');
-INSERT INTO roomService VALUES(10, 'ICU');
-INSERT INTO roomService VALUES(11, 'ServiceCloset');
-INSERT INTO roomService VALUES(100, 'RegularOffice');
-INSERT INTO roomService VALUES(200, 'DMOffice');
-INSERT INTO roomService VALUES(300, 'GMOffice');
 
-/* SELECT * FROM roomService; */
-
-INSERT INTO Equipment VALUES(1, 9, 'Sony', 'drill', 'be careful');
-INSERT INTO Equipment VALUES(2, 29, 'Panasonic', 'light', 'turn on');
-INSERT INTO Equipment VALUES(3, 69, 'Samsung', 'stretcher', 'put person on stretcher');
-INSERT INTO Equipment VALUES(4, 7, 'LRMN', 'CTScanner', 'press button');
-INSERT INTO Equipment VALUES(5, 3, 'Original', 'X-Ray', 'scan body part');
-INSERT INTO Equipment VALUES(6, 3, 'XII', 'CoffeMachine', 'brew coffee and enjoy');
-INSERT INTO Equipment VALUES(7, 4, 'Digilent', 'potentiometer', 'plug into socket');
-INSERT INTO Equipment VALUES(8, 10, 'Panasonic', 'cattle prod', 'not just for cattle');
-INSERT INTO Equipment VALUES(9, 30, 'Samsung', 'syringe', 'poke poke');
-INSERT INTO Equipment VALUES(10, 1, 'Samsung', 'tube', 'use');
-
-/* SELECT * FROM Equipment; */
-
-INSERT INTO Unit VALUES('1000', 1, 1, 1994, TO_DATE('17/12/2011 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Unit VALUES('1001', 1, 2, 1995, TO_DATE('14/02/2010 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Unit VALUES('1002', 1, 4, 1996, TO_DATE('10/10/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Unit VALUES('2000', 2, 9, 1996, TO_DATE('01/01/2014 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Unit VALUES('2001', 2, 11, 2011, TO_DATE('17/12/2011 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Unit VALUES('2002', 2, 8, 2010, TO_DATE('17/12/2010 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Unit VALUES('3000', 3, 7, 2011, TO_DATE('17/12/2017 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Unit VALUES('3001', 3, 2, 2009, TO_DATE('04/12/2011 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Unit VALUES('3002', 3, 3, 2003, TO_DATE('17/12/2010 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Unit VALUES('4000', 4, 1, 2000, TO_DATE('13/11/2010 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Unit VALUES('4001', 4, 5, 2008, TO_DATE('14/12/2010 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Unit VALUES('4002', 4, 6, 2017, TO_DATE('17/10/2011 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Unit VALUES('5000', 5, 3, 2017, TO_DATE('18/12/2017 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Unit VALUES('5001', 5, 2, 2010, TO_DATE('17/12/2012 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Unit VALUES('5002', 5, 10, 2011, TO_DATE('17/09/2010 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Unit VALUES('6000', 6, 7, 2010, TO_DATE('17/12/2010 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Unit VALUES('6001', 6, 3, 2011, TO_DATE('17/03/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Unit VALUES('6002', 6, 8, 1986, TO_DATE('17/04/2011 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Unit VALUES('A01-02X', 7, 1, 1994, TO_DATE('17/12/2015 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Unit VALUES('B01-02X', 8, 2, 1995, TO_DATE('12/12/2017 12:03:17', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Unit VALUES('C01-02X', 9, 3, 1996, TO_DATE('30/11/2014 12:13:35', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Unit VALUES('A02-02X', 7, 3, 1999, TO_DATE('15/12/2015 12:23:37', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Unit VALUES('B02-02X', 8, 4, 1993, TO_DATE('2/12/2017 11:37:37', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Unit VALUES('C02-02X', 9, 4, 2010, TO_DATE('6/12/2013 12:32:36', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Unit VALUES('A03-02X', 7, 5, 2011, TO_DATE('6/12/2015 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Unit VALUES('B03-02X', 8, 5, 1995, TO_DATE('20/12/2016 11:23:37', 'DD/MM/YYYY hh:mi:ss'));
-INSERT INTO Unit VALUES('C03-02X', 9, 5, 1990, TO_DATE('17/12/2013 12:13:57', 'DD/MM/YYYY hh:mi:ss'));
-
-/* SELECT * FROM Unit */
 
 INSERT INTO Patient VALUES(123421234, 8671234567, 'James', 'Woods', '12 Olive St.');
 INSERT INTO Patient VALUES(111223333, 8671234561, 'Sarah', 'Burk', '111 Central St.');
@@ -286,16 +164,12 @@ INSERT INTO Patient VALUES(012421290, 8671234333, 'Jeremy', 'Rust', '17 Bridge S
 INSERT INTO Patient VALUES(123428923, 8671234444, 'Stephen', 'Larsen', '10 Roger St.');
 INSERT INTO Patient VALUES(111111234, 5081234567, 'David', 'Johnson', '2 Spruce St.');
 INSERT INTO Patient VALUES(222334444, 3216540987, 'Kate', 'Shirley', '63 Starry St.');
-INSERT INTO Patient VALUES(999887777, 1111111111, 'Ashley', 'Sawin', '16 Olive St.');
-INSERT INTO Patient VALUES(987654321, 2222222222, 'Faye', 'Falco', '18 Olive St.');
-INSERT INTO Patient VALUES(123123123, 3333333333, 'Sam', 'Woods', '31 Sylvester St.');
 
-/* SELECT * FROM Patient; */
 
 
 INSERT INTO Doctor VALUES(1, 'psychology', 'male', 'David', 'ONeill');
 INSERT INTO Doctor VALUES(2, 'orthopedic', 'female', 'Julia', 'Jones');
-INSERT INTO Doctor VALUES(3, 'surgery', 'male', 'Edward', 'Scissor');
+INSERT INTO Doctor VALUES(3, 'surgery', 'male', 'Edward', 'Scissor'); 
 INSERT INTO Doctor VALUES(4, 'endocrinology', 'female', 'Sylvia', 'Nelson');
 INSERT INTO Doctor VALUES(5, 'neurology', 'male', 'Thomas', 'Pettigrew');
 INSERT INTO Doctor VALUES(6, 'nutrition', 'female', 'Sarah', 'Davids');
@@ -303,23 +177,16 @@ INSERT INTO Doctor VALUES(7, 'pediatry', 'male', 'Oliver', 'Twist');
 INSERT INTO Doctor VALUES(8, 'gynecology', 'female', 'Selena', 'Michaels');
 INSERT INTO Doctor VALUES(9, 'radiology', 'male', 'James', 'Oliver');
 INSERT INTO Doctor VALUES(10, 'cardiac', 'female', 'Ida', 'Smith');
-INSERT INTO Doctor VALUES(11, 'pediatrician', 'female', 'J', 'D');
-INSERT INTO Doctor VALUES(12, 'vivisection', 'male', 'Perry', 'Cox');
-INSERT INTO Doctor VALUES(13, 'immunology', 'male', 'Christopher', 'Turk');
-INSERT INTO Doctor VALUES(14, 'radiology', 'female', 'Elliot', 'Reid');
-INSERT INTO Doctor VALUES(15, 'dissection', 'male', 'Bob', 'Kelso');
-INSERT INTO Doctor VALUES(16, 'anasthesiologist', 'male', 'The', 'Todd');
-INSERT INTO Doctor VALUES(17, 'internal medicine', 'female', 'Carla', 'Espinosa');
-INSERT INTO Doctor VALUES(18, 'pediatrics', 'male', 'Drew', 'Suffin');
-INSERT INTO Doctor VALUES(19, 'dance', 'male', 'Cole', 'Aaronson');
-
-/* SELECT * FROM Doctor; */
+INSERT INTO Doctor VALUES(11, 'neurology', 'male', 'Burt', 'True');
 
 
-INSERT INTO Appointment VALUES(1, 100000, 5000, 123421234, TO_DATE('17/12/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'),
+
+
+INSERT INTO Appointment VALUES(1, 100000, 5000, 123421234, TO_DATE('01/01/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'),
 TO_DATE('17/12/2014 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('03/05/2015 11:30:00', 'DD/MM/YYYY hh:mi:ss'));
 INSERT INTO Appointment VALUES(2, 30000, 20000, 123421234, TO_DATE('03/05/2015 11:30:00', 'DD/MM/YYYY hh:mi:ss'), 
 TO_DATE('03/05/2015 02:30:00', 'DD/MM/YYYY hh:mi:ss'), null);
+
 
 INSERT INTO Appointment VALUES(3, 2020, 1000, 111223333, TO_DATE('03/05/2016 11:30:00', 'DD/MM/YYYY hh:mi:ss'), 
 TO_DATE('03/05/2018 02:30:00', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('04/05/2016 11:30:00', 'DD/MM/YYYY hh:mi:ss'));
@@ -328,14 +195,15 @@ TO_DATE('04/06/2016 11:30:00', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('04/07/2016 11:30
 INSERT INTO Appointment VALUES(5, 1000, 300, 111223333, TO_DATE('04/07/2016 11:30:00', 'DD/MM/YYYY hh:mi:ss'), 
 TO_DATE('09/07/2016 02:30:00', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('04/02/2017 11:30:00', 'DD/MM/YYYY hh:mi:ss'));
 
-
-
 INSERT INTO Appointment VALUES(6, 200, 10, 304421202, TO_DATE('21/09/2015 11:30:00', 'DD/MM/YYYY hh:mi:ss'), 
 TO_DATE('21/01/2016 02:30:00', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('03/03/2016 11:30:00', 'DD/MM/YYYY hh:mi:ss'));
 INSERT INTO Appointment VALUES(7, 23481, 40, 304421202, TO_DATE('03/03/2016 11:30:00', 'DD/MM/YYYY hh:mi:ss'), 
 TO_DATE('03/06/2016 02:30:00', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('03/05/2017 11:30:00', 'DD/MM/YYYY hh:mi:ss'));
 INSERT INTO Appointment VALUES(8, 1002, 50, 304421202, TO_DATE('03/05/2017 11:30:00', 'DD/MM/YYYY hh:mi:ss'), 
 TO_DATE('03/05/2017 02:30:00', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('04/05/2018 11:30:00', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Appointment VALUES(18, 2919, 50, 304421202, TO_DATE('03/05/2018 11:30:00', 'DD/MM/YYYY hh:mi:ss'), 
+TO_DATE('03/05/2018 02:30:00', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('04/05/2018 11:30:00', 'DD/MM/YYYY hh:mi:ss'));
+
 
 INSERT INTO Appointment VALUES(9, 3838, 1239, 789421554, TO_DATE('01/01/2010 11:30:00', 'DD/MM/YYYY hh:mi:ss'), 
 TO_DATE('03/03/2010 02:30:00', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('04/05/2013 11:30:00', 'DD/MM/YYYY hh:mi:ss'));
@@ -358,200 +226,362 @@ INSERT INTO Appointment VALUES(16, 1872, 1000, 605421664, TO_DATE('03/05/2015 12
 TO_DATE('03/05/2015 09:30:00', 'DD/MM/YYYY hh:mi:ss'), null);
 INSERT INTO Appointment VALUES(17, 1492, 800, 123428923, TO_DATE('01/09/2010 06:30:00', 'DD/MM/YYYY hh:mi:ss'), 
 TO_DATE('03/09/2010 10:30:00', 'DD/MM/YYYY hh:mi:ss'), null);
-/* SELECT * FROM Appointment; */
 
 
-INSERT INTO AptRoom VALUES(1, 1, TO_DATE('17/12/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('17/12/2014 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO AptRoom VALUES(1, 1, TO_DATE('17/01/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('17/01/2014 12:40:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO AptRoom VALUES(1, 1, TO_DATE('17/02/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('17/02/2014 12:40:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO AptRoom VALUES(1, 1, TO_DATE('17/03/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('17/03/2014 12:40:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO AptRoom VALUES(1, 1, TO_DATE('17/04/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('17/04/2014 12:40:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO AptRoom VALUES(1, 1, TO_DATE('17/05/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('17/05/2014 12:50:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO AptRoom VALUES(6, 1, TO_DATE('17/05/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('17/05/2014 12:50:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO AptRoom VALUES(7, 1, TO_DATE('18/05/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('17/05/2014 12:50:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO AptRoom VALUES(8, 1, TO_DATE('19/05/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('18/05/2014 12:50:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO AptRoom VALUES(8, 1, TO_DATE('20/05/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('20/05/2014 12:50:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO AptRoom VALUES(6, 1, TO_DATE('21/05/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('22/05/2014 12:50:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO AptRoom VALUES(3, 1, TO_DATE('23/05/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('23/05/2014 12:50:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO AptRoom VALUES(4, 1, TO_DATE('24/05/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('24/05/2014 12:50:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO AptRoom VALUES(14, 1, TO_DATE('24/05/2014 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('24/05/2015 12:50:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO AptRoom VALUES(14, 4, TO_DATE('24/05/2018 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('24/05/2018 12:50:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO AptRoom VALUES(1, 4, TO_DATE('24/05/2018 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('24/05/2018 12:50:37', 'DD/MM/YYYY hh:mi:ss'));
 
+
+
+
+
+
+
+INSERT INTO Examine VALUES(1, 1, 'ok');
+INSERT INTO Examine VALUES(1, 2, 'ok');
 INSERT INTO Examine VALUES(1, 3, 'ok');
-INSERT INTO Examine VALUES(2, 4, 'good vitals');
+INSERT INTO Examine VALUES(1, 4, 'ok');
+INSERT INTO Examine VALUES(1, 5, 'ok');
+INSERT INTO Examine VALUES(1, 6, 'ok');
+INSERT INTO Examine VALUES(1, 7, 'ok');
+INSERT INTO Examine VALUES(1, 8, 'ok');
+INSERT INTO Examine VALUES(1, 9, 'ok');
+INSERT INTO Examine VALUES(1, 10, 'ok');
+
+
+INSERT INTO Examine VALUES(2, 1, 'good vitals');
+INSERT INTO Examine VALUES(2, 2, 'good vitals');
 INSERT INTO Examine VALUES(2, 3, 'high blood pressure');
-INSERT INTO Examine VALUES(2, 5, 'high blood sugar');
-INSERT INTO Examine VALUES(8, 5, 'stable condition');
+INSERT INTO Examine VALUES(2, 4, 'high blood sugar');
+INSERT INTO Examine VALUES(2, 6, 'stable condition');
+INSERT INTO Examine VALUES(2, 7, 'good vitals');
+INSERT INTO Examine VALUES(2, 8, 'good vitals');
+INSERT INTO Examine VALUES(2, 9, 'good vitals');
+INSERT INTO Examine VALUES(2, 10, 'good vitals');
+INSERT INTO Examine VALUES(2, 11, 'good vitals');
+INSERT INTO Examine VALUES(2, 12, 'good vitals');
+
+INSERT INTO Examine VALUES(8, 1, 'joint pain');
+INSERT INTO Examine VALUES(8, 2, 'joint pain');
+INSERT INTO Examine VALUES(8, 3, 'joint pain');
 INSERT INTO Examine VALUES(8, 4, 'joint pain');
-INSERT INTO Examine VALUES(8, 3, 'headache');
+INSERT INTO Examine VALUES(8, 5, 'joint pain');
+INSERT INTO Examine VALUES(8, 6, 'joint pain');
+INSERT INTO Examine VALUES(8, 7, 'joint pain');
+INSERT INTO Examine VALUES(8, 8, 'joint pain');
+INSERT INTO Examine VALUES(8, 9, 'joint pain');
+INSERT INTO Examine VALUES(8, 10, 'headache');
+INSERT INTO Examine VALUES(8, 14, 'headache');
+
 INSERT INTO Examine VALUES(9, 4, 'heartburn');
 INSERT INTO Examine VALUES(9, 3, 'hyperactive');
 INSERT INTO Examine VALUES(9, 5, 'fatigued');
-INSERT INTO Examine VALUES(1, 5, 'dry eyes');
-INSERT INTO Examine VALUES(1, 16, 'low blood pressure');
-INSERT INTO Examine VALUES(1, 7, 'fast heart rate');
+INSERT INTO Examine VALUES(9, 1, 'fatigued');
 INSERT INTO Examine VALUES(10, 5, 'back pain');
+INSERT INTO Examine VALUES(3, 5, 'heartburn');
+
+
+
 INSERT INTO Examine VALUES(5, 6, 'back pain');
 INSERT INTO Examine VALUES(3, 7, 'back pain');
 INSERT INTO Examine VALUES(5, 4, 'joint pain');
 INSERT INTO Examine VALUES(5, 5, 'joint pain');
 INSERT INTO Examine VALUES(5, 16, 'joint pain');
 INSERT INTO Examine VALUES(5, 7, 'joint pain');
-INSERT INTO Examine VALUES(1, 6, 'arthritis');
 INSERT INTO Examine VALUES(4, 8, 'doing well');
 INSERT INTO Examine VALUES(6, 9, 'good reflexes');
 INSERT INTO Examine VALUES(10, 10, 'doing well');
 INSERT INTO Examine VALUES(9, 11, 'very stressed');
 INSERT INTO Examine VALUES(5, 12, 'needs exercise');
 INSERT INTO Examine VALUES(8, 13, 'back pain');
-INSERT INTO Examine VALUES(2, 14, 'trouble breathing');
 INSERT INTO Examine VALUES(3, 15, 'healthy blood pressure');
 INSERT INTO Examine VALUES(4, 16, 'good heart rate');
+INSERT INTO Examine VALUES(11, 3, 'ok');
+
 
 /* Part 1 */
-GO
-CREATE VIEW CriticalCases(Patient_SSN, firstName, lasName, numberOfAdmissionsToICU) AS 
-	SELECT P.SSN, P.firstName, P.lastName, COUNT(*) as numberOfAdmissionsToICU
-	FROM Patient P, (SELECT A.patientSSN as patientSSN, A.aptID as aptID
-					FROM Appointment A
-					WHERE A.aptID in (SELECT AptID FROM AptRoom A WHERE A.roomNumber in 
-							(SELECT roomNumber FROM roomService WHERE rService = "ICU"))) apts
-	WHERE P.SSN = apts.patientSSN 
-	GROUP BY P.SSN 
-	HAVING COUNT(*) > 2; 
-GO
-CREATE VIEW DoctorsLoad(DoctorID, gender, load) AS 
-	(SELECT ID as DoctorID, gender, 'Underload' as load 
-	FROM Doctor D, Examine E
-	WHERE D.ID = E.docID
-	GROUP BY  D.ID 
-	HAVING COUNT(*) <= 10)
-	UNION
-	(SELECT ID as DoctorID, gender, 'Overload' as load 
-	FROM Doctor D, Examine E
-	WHERE D.ID = E.docID
-	GROUP BY  D.ID 
-	HAVING COUNT(*) > 10);
+CREATE OR REPLACE VIEW CriticalCases(Patient_SSN, firstName, lastName, numberOfAdmissionsToICU) AS  
+	SELECT q.patientSSN, P.firstName, p.lastName, q.numberOfAdmissionsToICU
+	FROM Patient P, 
+	(SELECT A.patientSSN, COUNT(*) as numberOfAdmissionsToICU
+	from Appointment A,
+	(SELECT AptID FROM AptRoom A WHERE A.roomNumber in  
+								(SELECT roomNumber FROM roomService WHERE rService = 'ICU')) q
+	WHERE A.AptID = q.AptID
+	GROUP BY patientSSN) q
+	WHERE q.patientSSN = P.SSN AND q.numberOfAdmissionsToICU >= 2;
 
 
-	
-<<<<<<< HEAD
-SELECT * FROM DoctorsLoad;
+/* SHOULD HAVE 123421234, 304421202, 111223333 */
+SELECT * FROM CriticalCases;
 
-SELECT *
-FROM CriticalCases
-WHERE numberOfAdmissionsToICU > 4;
+CREATE OR REPLACE VIEW DoctorsLoad(DoctorID, gender, load) AS  
+	(SELECT D.ID as DoctorID, D.gender, 'Underloaded' as load  
+	FROM Doctor D,
+        (SELECT D.ID
+        FROM Doctor D,Examine E 
+	   WHERE D.ID = E.docID 
+	    GROUP BY  D.ID  
+	    HAVING COUNT(*) <= 10) c
+	WHERE D.ID = c.ID)
+	UNION 
+	(SELECT D.ID as DoctorID, D.gender, 'Overloaded' as load  
+	FROM Doctor D,
+        (SELECT D.ID
+        FROM Doctor D,Examine E 
+	   WHERE D.ID = E.docID 
+	    GROUP BY  D.ID  
+	    HAVING COUNT(*) >= 10) c
+	WHERE D.ID = c.ID);
 
-SELECT DoctorID, firstName, lastName
-FROM DoctorsLoad, Doctor
-WHERE Doctor.ID = DoctorsLoad.DoctorID AND DoctorsLoad.gender = 'female';
+/* PART  1 */
 
-SELECT DL.DoctorID, Y.Patient_SSN, Y.result
-FROM DoctorsLoad DL, (SELECT X.Patient_SSN, E.result, E.docID
-						FROM Examine E, 
-							(SELECT A.aptID, CC.Patient_SSN 
-							FROM Appointment A, CriticalCases CC 
-							WHERE A.patientSSN = CC.Patient_SSN) X
-						WHERE X.aptID = E.aptID) Y
-WHERE DL.load = 'Underload' AND DL.DoctorID = Y.docID;
+/* Use the views created above (you may need the original tables as well) to report the critical-case patients with number of admissions to ICU greater than 4. */ 
+/* SHOULD HAVE 123421234, 304421202 */
 
-CREATE OR REPLACE TRIGGER rServiceTrig
-AFTER UPDATE OR INSERT ON roomService
-DECLARE
-	numS NUMBER;
-BEGIN
-	SELECT COUNT(*) 
-	INTO numS
-	FROM roomService RS
-	GROUP BY RS.roomNumber
-	HAVING count(RS.rService) > 3;
+SELECT C.Patient_SSN, C.firstName, C.lastname 
+FROM CriticalCases C
+WHERE C.numberOfAdmissionsToICU > 4;
 
-	IF numS > 0
-		THEN RAISE_APPLICATION_ERROR(-20000, 'Rooms cannot have more than 3 services.');
-	END IF;
+/* Use the views created above (you may need the original tables as well) to report the female overloaded doctors. You should report the doctor ID, firstName, and lastName. */
+SELECT L.DoctorID, D.firstName, D.lastName 
+FROM DoctorsLoad L, Doctor D
+WHERE L.gender = 'female' AND L.load = 'Overloaded' and L.DoctorID = D.ID;
+
+ /* Use the views created above (you may need the original tables as well) to report the comments 
+ inserted by underloaded doctors when examining critical-case patients. You should report the doctor Id, patient SSN, and the comment. */
+ SELECT d.DoctorID, c.patientSSN, d.result
+ FROM 
+ (SELECT D.DoctorID, E.result, E.aptID
+ FROM DoctorsLoad D, Examine E
+ WHERE E.docID = D.DoctorID AND D.load = 'Underloaded') d,
+(SELECT A.AptID, A.patientSSN
+ FROM Appointment A 
+ WHERE A.patientSSN in (SELECT C.Patient_SSN FROM CriticalCases C)) c
+WHERE d.aptID = c.AptID; 
+
+/* PART 2 */
+/*
+-Any room in the hospital cannot offer more than three services.
+-The insurance payment should be calculated automatically as 70% of the total payment. If the total payment changes then the insurance amount should also change.
+o If in your DB you store the insurance payment as a percent, then it should be always set to 70%.
+-Ensure that regular employees (with rank 0) must have their supervisors as division managers (with rank 1). Also each regular employee must have a supervisor at all times.
+-Similarly, division managers (with rank 1) must have their supervisors as general managers (with rank 2). Division managers must have supervisors at all times.
+-When a patient is admitted to ICU room on date D, the futureVisitDate should be automatically set to 3 months after that date, i.e., D + 3 months. The futureVisitDate may be manually changed later, but when the ICU admission happens, the date should be set to default as mentioned above.
+-If an equipment of type ‘MRI’, then the purchase year must be not null and after 2005.
+-When a patient is admitted to the hospital, i.e., a new record is inserted into the Admission table; the system should print out the names of the doctors who previously examined this patient (if any).
+o Hint: Use function dbms_output.put_line() also make sure to run the following line so you can see the output lines.
+Sql> set serveroutput on;
+*/
+set serveroutput on;
+/* Any room in the hospital cannot offer more than three services. */
+CREATE OR REPLACE TRIGGER roomServices 
+	BEFORE INSERT ON roomService
+	FOR EACH ROW
+DECLARE 
+	numServices int;
+BEGIN 
+    SELECT COUNT(*) into numServices
+    FROM roomService R
+    WHERE R.roomNumber = :new.roomNumber;
+    IF numServices = 3 THEN
+        RAISE_APPLICATION_ERROR(-20345, 'Room already has 3 services.');
+    END IF;
 END;
 /
 
-CREATE OR REPLACE TRIGGER insTrig
-BEFORE UPDATE OR INSERT ON Appointment
-FOR EACH ROW
-BEGIN
-	:new.insuranceCoverage := :new.totalPayment * .7;
+/* -The insurance payment should be calculated automatically as 70% of the total payment. If the total payment changes then the insurance amount should also change.
+o If in your DB you store the insurance payment as a percent, then it should be always set to 70%. */
+CREATE OR REPLACE TRIGGER insurance 
+	BEFORE INSERT OR UPDATE ON Appointment
+	FOR EACH ROW
+BEGIN 
+    :new.insuranceCoverage := :new.totalPayment * 0.7; 
 END;
 /
 
-CREATE OR REPLACE TRIGGER supervisorTrig
-AFTER UPDATE OR INSERT OR DELETE ON Employee
-FOR EACH ROW
-DECLARE
-	manID number;
-	tRnk number;
-	diff number;
-	CURSOR Emp IS
-		SELECT E.managerID, E.rank
-		FROM Employee E
-		WHERE E.jobTitle!='GeneralManager';
-BEGIN
-	OPEN Emp;
-	LOOP
-		/*FETCH Emp.managerID INTO manID;
-		FETCH Emp.rank INTO tRnk;*/
+/* 
+-Ensure that regular employees (with rank 0) must have their supervisors as division managers (with rank 1). Also each regular employee must have a supervisor at all times.
+-Similarly, division managers (with rank 1) must have their supervisors as general managers (with rank 2). Division managers must have supervisors at all times.
+*/
+CREATE OR REPLACE TRIGGER empManager 
+AFTER INSERT OR UPDATE ON Employee
+DECLARE 
+    CURSOR allManaged IS 
+        SELECT managerID, jobTitle FROM Employee WHERE jobTitle = 0 OR jobTitle = 1;
+	mngTitle int;
+BEGIN 
+	FOR emp in allManaged LOOP
+	    DBMS_OUTPUT.PUT_LINE(emp.jobTitle || ' ' || emp.managerID);
+
+		
+		IF emp.managerID IS NOT NULL THEN
+			SELECT E.jobTitle INTO mngTitle FROM Employee E WHERE E.ID = emp.managerID; 
+			IF emp.jobTitle = 0 AND mngTitle != 1 THEN
+				RAISE_APPLICATION_ERROR(-20002, 'Regular employees must be supervised by a Division Manager.');
+			ELSIF emp.jobTitle = 1 and mngTitle != 2 THEN
+				RAISE_APPLICATION_ERROR(-20003, 'Division managers must be supervised by a General Manager.');
+			END IF;
+		ELSE 
+		    RAISE_APPLICATION_ERROR(-20001, 'This employee must have a supervisor.');
+		END IF;
 	END LOOP;
-	CLOSE Emp;
+END;
+/
+
+/* -If an equipment of type ‘MRI’, then the purchase year must be not null and after 2005. */
+CREATE OR REPLACE TRIGGER MRIPurchase 
+	BEFORE INSERT ON Unit
+	FOR EACH ROW
+	WHEN (new.eqTypeID = 'MRI')
+BEGIN 
+    IF (:new.yearOfPurchase IS NULL) THEN
+        RAISE_APPLICATION_ERROR(-20120, 'Year of purchase cannot be null');
+    ELSE 
+        IF :new.yearOfPurchase <= 2005 THEN
+            RAISE_APPLICATION_ERROR(-20121, 'Year of purchase must be after 2005');
+        END IF;
+    END IF;
+END;
+/
+/* -When a patient is admitted to ICU room on date D, the futureVisitDate should be automatically set to 3 months after that date, 
+i.e., D + 3 months. The futureVisitDate may be manually changed later, but when the ICU admission happens, the date should be set to default as mentioned above.
+*/
+CREATE OR REPLACE TRIGGER futureVisitDate   
+	BEFORE INSERT ON AptRoom  
+	FOR EACH ROW  
+	DECLARE 
+	    CURSOR services(roomNum int) IS 
+	        SELECT S.rService FROM roomService S WHERE S.roomNumber = roomNum;
+BEGIN   
+    FOR service in services(:new.roomNumber) LOOP 
+        IF service.rService = 'ICU' THEN
+            UPDATE Appointment A   
+            SET A.futureAptDate = ADD_MONTHS(:new.startDate, 3) 
+            WHERE A.AptID = :new.aptID;  
+        END IF;     
+    END LOOP;
+END;
+/
+/* -When a patient is admitted to the hospital, i.e., a new record is inserted into the Admission table; the system 
+should print out the names of the doctors who previously examined this patient (if any).SELECT A.patientSSN INTO SSN FROM Appointment A WHERE A.AptID = :new.AptID;
 	
+o Hint: Use function dbms_output.put_line() also make sure to run the following line so you can see the output lines. */
+
+CREATE OR REPLACE TRIGGER newAdmission 
+	BEFORE INSERT ON Appointment
+	FOR EACH ROW
+	DECLARE  
+	    CURSOR allDocs(pSSN INTEGER) IS
+	        SELECT DISTINCT D.firstName, D.lastName
+	        FROM Doctor D, (SELECT E.docID as docID FROM Appointment A, Examine E WHERE A.patientSSN = pSSN AND A.AptID = E.aptID) q
+	        WHERE D.ID = q.docID
+	        ORDER BY D.lastName, D.firstName;
+	
+BEGIN 
+	DBMS_OUTPUT.PUT_LINE('Patient SSN:' || :new.patientSSN);
+	FOR doc IN allDocs(:new.patientSSN) Loop
+        DBMS_OUTPUT.PUT_LINE('Doctor: ' || doc.lastName || ', ' || doc.firstName);
+    END LOOP;
 END;
 /
+/* TEST TRIGGERS: */
+
+/* Regular and Division Manager Triggers: */
+INSERT INTO Employee VALUES(300, 80000, 300, 2,'Rodica', 'Neamtu', NULL);
+INSERT INTO Employee VALUES(301, 80000, 300, 2,'Pablo', 'Picasso', NULL);
+INSERT INTO Employee VALUES(302, 80000, 300, 2,'Freddie', 'Mercury', NULL);
+
+INSERT INTO Employee VALUES(200, 80000, 200, 1,'Dan', 'Song', 300);
+INSERT INTO Employee VALUES(201, 80000, 201, 1,'Bob', 'Burger', 300);
+
+INSERT INTO Employee VALUES(202, 80000, 200, 1,'David', 'Bowie', 300);
+/* Should return an error because manager is not a General Manager */ 
+INSERT INTO Employee VALUES(206, 120000, 202, 1,'Trevor', 'Valcourt', 200); 
+/* Should return an error because manager field is NULL */
+INSERT INTO Employee VALUES(207, 110000, 201, 1,'Ryan', 'Cooney', NULL);
+
+INSERT INTO Employee VALUES(100, 80000, 100, 0,'Stan', 'Smith', 200); 
+INSERT INTO Employee VALUES(102, 80000, 100, 0,'Patrick', 'Star', 201);
+/* Should return an error because manager is not a Division Manager */ 
+INSERT INTO Employee VALUES(103, 80000, 100, 0,'Robert', 'Sponge', 301);
+/* Should return an error because manager field is NULL */ 
+INSERT INTO Employee VALUES(104, 80000, 100, 0,'Julia', 'Roberts', NULL); 
+INSERT INTO Employee VALUES(105, 80000, 100, 0,'Meryl', 'Streep', 204); 
+
+/* SHOULD RETURN AN ERROR, can't change Div Manager to be managed by another Div Manager: */
+UPDATE Employee
+SET managerID = 200 
+WHERE ID = 200;
+
+/* SHOULD RETURN AN ERROR, every employee must have a manager: */
+UPDATE Employee
+SET managerID = NULL 
+WHERE ID = 100;
+/* should return error, not managed by a Division Manager */ 
+UPDATE Employee
+SET managerID = 300 
+WHERE ID = 100;
+
+/* SHOULD RETURN AN ERROR, every employee must have a manager: */
+UPDATE Employee
+SET managerID = NULL 
+WHERE ID = 200;
+
+/* MRI trigger */
+/* Should be inserted properly */
+INSERT INTO Equipment VALUES('MRI', 9, 'SS30', 'used for scans', 'operate wisely');
+INSERT INTO Equipment VALUES('CTScanner', 1, 'S123', 'used for scans', 'operate wisely');
+
+INSERT INTO Unit VALUES('1000', 'MRI', 1, 2013, TO_DATE('17/12/2011 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Unit VALUES('1001', 'MRI', 2, 2010, TO_DATE('14/02/2010 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Unit VALUES('1002', 'MRI', 4, 2007, TO_DATE('10/10/2013 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Unit VALUES('2000', 'MRI', 9, 2006, TO_DATE('01/01/2014 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Unit VALUES('3001', 'MRI', 2, 2015, TO_DATE('04/12/2011 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Unit VALUES('2001', 'CTScanner', 11, 2004, TO_DATE('17/12/2016 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+/* SHOULD RETURN AN ERROR */
+INSERT INTO Unit VALUES('2001', 'MRI', 11, 2004, TO_DATE('17/12/2016 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Unit VALUES('2002', 'MRI', 8, 2005, TO_DATE('17/12/2010 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Unit VALUES('3000', 'MRI', 7, NULL, TO_DATE('17/12/2017 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+INSERT INTO Unit VALUES('3002', 'MRI', 3, 2003, TO_DATE('17/12/2010 12:33:37', 'DD/MM/YYYY hh:mi:ss'));
+
+/* Room Service Trigger */
+/* Should throw an error: */
+INSERT INTO roomService VALUES(3, 'Cafe');
+/* Should be ok */
+INSERT INTO roomService VALUES(2, 'Bathroom');
+
+/* Insurance Trigger and new appointment */
+INSERT INTO Appointment VALUES(19, 1314, 400, 111223333, TO_DATE('01/02/2015 08:30:00', 'DD/MM/YYYY hh:mi:ss'), 
+TO_DATE('01/02/2015 05:30:00', 'DD/MM/YYYY hh:mi:ss'), null);
+INSERT INTO Appointment VALUES(20, 1872, 1000, 789421554, TO_DATE('03/05/2015 12:30:00', 'DD/MM/YYYY hh:mi:ss'), 
+TO_DATE('03/05/2020 09:30:00', 'DD/MM/YYYY hh:mi:ss'), null);
+
+/* new patient */
+INSERT INTO Appointment VALUES(21, 1492, 800, 012421290, TO_DATE('01/09/2010 06:30:00', 'DD/MM/YYYY hh:mi:ss'), 
+TO_DATE('03/09/2010 10:30:00', 'DD/MM/YYYY hh:mi:ss'), null);
+
+SELECT totalPayment, insuranceCoverage FROM Appointment WHERE AptID = 19;
+SELECT totalPayment, insuranceCoverage FROM Appointment WHERE AptID = 20;
+
+/* future visit date */
+INSERT INTO AptRoom VALUES(4, 1, TO_DATE('24/05/2018 12:33:37', 'DD/MM/YYYY hh:mi:ss'), TO_DATE('24/05/2018 12:50:37', 'DD/MM/YYYY hh:mi:ss'));
+SELECT R.startDate as ICUEnter, A.futureAptDate as FutureAptDate
+FROM AptRoom R, Appointment A
+WHERE R.aptID = 4 AND A.AptID = 4;
 
 
-CREATE OR REPLACE TRIGGER supervisorTrig
-AFTER UPDATE OR INSERT OR DELETE ON Employee
-FOR EACH ROW
-DECLARE
-	manID number;
-	tRnk number;
-	diff number;
-	CURSOR Emp IS
-		SELECT E.managerID, E.rank
-		FROM Employee E
-		WHERE E.jobTitle != 'GeneralManager'
-BEGIN
-	OPEN Emp;
-	LOOP
-		FETCH Emp.managerID, Emp.rank INTO manID, tRnk;
-		FETCH 
-		IF manID is NULL
-			THEN RAISE_APPLICATION_ERROR (-20005, 'managerID cannot be null.');
-		END IF;
-		SELECT count(*) INTO diff
-		FROM Employee E 
-		WHERE E.ID = manID
-		IF(diff != 1)
-			THEN RAISE_APPLICATION_ERROR (-20006, 'manager must exist.');
-		END IF;
-		SELECT E.rank INTO diff
-		FROM Employee E 
-		WHERE E.ID = manID
-		IF(diff - tRnk != 1)
-			THEN RAISE_APPLICATION_ERROR (-20007, 'Rank mismatch.');
-		END IF;
-	END LOOP;
-	close Emp;
-END;
-/
-
-
-CREATE OR REPLACE TRIGGER MRITrig
-AFTER UPDATE OR INSERT ON Equipment
-DECLARE
-	temp NUMBER;
-BEGIN
-	SELECT COUNT(*) INTO temp
-	FROM Equipment E, Unit U
-	WHERE E.typeID = U.eqTypeID AND E.model = 'MRI' AND U.yearOfPurchase is not NULL AND U.yearOfPurchase > 2005;
-	IF temp > 0
-		THEN RAISE_APPLICATION_ERROR (-20004, 'MRI YoP must be after 2005.');
-	END IF;
-END;
-/
-
-CREATE OR REPLACE TRIGGER MRITrig
-AFTER UPDATE OR INSERT ON Unit
-DECLARE
-	temp NUMBER;
-BEGIN
-	SELECT COUNT(*) INTO temp
-	FROM Equipment E, Unit U
-	WHERE E.typeID = U.eqTypeID AND E.model = 'MRI' AND U.yearOfPurchase is not NULL AND U.yearOfPurchase > 2005;
-	IF temp > 0
-		THEN RAISE_APPLICATION_ERROR (-20004, 'MRI YoP must be after 2005.');
-	END IF;
-END;
-/
-=======
->>>>>>> e115458780264f1afd813400aa9cc785268082af
+spool off
