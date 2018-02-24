@@ -25,7 +25,7 @@ CREATE TABLE Employee(
 	firstName VARCHAR2(20),  
 	lastName VARCHAR2(20), 
 	managerID INTEGER, 
-	CONSTRAINT manager_FK FOREIGN KEY (managerID) REFERENCES Employee(ID),
+	CONSTRAINT manager_FK FOREIGN KEY (managerID) REFERENCES Employee(ID) ON DELETE CASCADE,
 	CONSTRAINT jobPsn CHECK (jobTitle in (0, 1, 2))
 );
 
@@ -98,7 +98,7 @@ CREATE TABLE Appointment(
 	admissionDate DATE, 
 	leaveDate DATE,  
 	futureAptDate DATE, 
-	CONSTRAINT patient_FK FOREIGN KEY (patientSSN) REFERENCES Patient(SSN) 
+	CONSTRAINT patient_FK FOREIGN KEY (patientSSN) REFERENCES Patient(SSN) ON DELETE CASCADE
 );
 
 CREATE TABLE AptRoom( 
@@ -520,7 +520,7 @@ INSERT INTO Employee VALUES(102, 80000, 100, 0,'Patrick', 'Star', 201);
 INSERT INTO Employee VALUES(103, 80000, 100, 0,'Robert', 'Sponge', 301);
 /* Should return an error because manager field is NULL */ 
 INSERT INTO Employee VALUES(104, 80000, 100, 0,'Julia', 'Roberts', NULL); 
-INSERT INTO Employee VALUES(105, 80000, 100, 0,'Meryl', 'Streep', 204); 
+INSERT INTO Employee VALUES(105, 80000, 100, 0,'Meryl', 'Streep', 206; 
 
 /* SHOULD RETURN AN ERROR, can't change Div Manager to be managed by another Div Manager: */
 UPDATE Employee
